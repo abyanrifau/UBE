@@ -1,0 +1,33 @@
+# dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# next.js
+.next/
+out/
+build/
+
+# production env — never commit these
+.env
+.env.local
+.env*.local
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# editor / os
+.claude/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

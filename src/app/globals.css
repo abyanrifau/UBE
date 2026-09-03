@@ -1,0 +1,162 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ------------------------------------------------------------------ */
+/* Palette — greyscale only. Interest comes from contrast and spacing. */
+/* ------------------------------------------------------------------ */
+@layer base {
+  :root {
+    --paper: 255 255 255; /* page background            */
+    --ink: 10 10 10; /* primary text               */
+    --muted: 113 113 113; /* secondary text             */
+    --line: 226 226 226; /* hairlines and borders      */
+    --subtle: 246 246 246; /* cards, wells, hover fills  */
+    color-scheme: light;
+  }
+
+  .dark {
+    --paper: 8 8 8;
+    --ink: 250 250 250;
+    --muted: 150 150 150;
+    --line: 38 38 38;
+    --subtle: 20 20 20;
+    color-scheme: dark;
+  }
+
+  * {
+    border-color: rgb(var(--line));
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: rgb(var(--paper));
+    color: rgb(var(--ink));
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: rgb(var(--ink));
+    color: rgb(var(--paper));
+  }
+
+  :focus-visible {
+    outline: 2px solid rgb(var(--ink));
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  /* Native controls follow the theme instead of fighting it. */
+  input,
+  textarea,
+  select {
+    color-scheme: inherit;
+  }
+
+  input[type='date'],
+  input[type='datetime-local'] {
+    min-height: 2.75rem;
+  }
+
+  .dark input[type='date']::-webkit-calendar-picker-indicator,
+  .dark input[type='datetime-local']::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Components                                                          */
+/* ------------------------------------------------------------------ */
+@layer components {
+  /* The academy mark ships as black artwork on a white background.
+     Blend modes key the background out and flip the artwork for dark
+     mode, so no pre-processed transparent asset is needed. */
+  .brand-mark {
+    mix-blend-mode: multiply;
+  }
+  .dark .brand-mark {
+    mix-blend-mode: screen;
+    filter: invert(1);
+  }
+
+  .field {
+    @apply w-full rounded-none border border-line bg-paper px-3 py-2.5 text-[15px]
+           text-ink placeholder:text-muted transition-colors
+           focus:border-ink focus:outline-none focus:ring-0;
+  }
+
+  .label {
+    @apply mb-1.5 block text-[11px] font-semibold uppercase tracking-[0.12em] text-muted;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-none border px-4 py-2.5
+           text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-40;
+  }
+
+  .btn-primary {
+    @apply btn border-ink bg-ink text-paper hover:opacity-85;
+  }
+
+  .btn-secondary {
+    @apply btn border-line bg-paper text-ink hover:bg-subtle;
+  }
+
+  .btn-ghost {
+    @apply btn border-transparent bg-transparent text-muted hover:text-ink;
+  }
+
+  .btn-sm {
+    @apply px-3 py-1.5 text-[13px];
+  }
+
+  .card {
+    @apply border border-line bg-paper;
+  }
+
+  .tag {
+    @apply inline-flex items-center whitespace-nowrap border border-line px-2 py-0.5
+           text-[10px] font-semibold uppercase tracking-[0.12em] text-muted;
+  }
+
+  .tag-solid {
+    @apply inline-flex items-center whitespace-nowrap bg-ink px-2 py-0.5
+           text-[10px] font-semibold uppercase tracking-[0.12em] text-paper;
+  }
+
+  .eyebrow {
+    @apply text-[11px] font-semibold uppercase tracking-[0.16em] text-muted;
+  }
+
+  .prose-body {
+    @apply whitespace-pre-wrap text-[15px] leading-relaxed text-ink;
+  }
+
+  .divide-line > * + * {
+    border-top: 1px solid rgb(var(--line));
+  }
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

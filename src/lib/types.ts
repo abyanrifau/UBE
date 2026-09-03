@@ -1,0 +1,147 @@
+export type AppRole = 'admin' | 'treasurer' | 'exco' | 'coach' | 'player';
+export type EventType = 'practice' | 'match' | 'tournament' | 'meeting' | 'event';
+export type AttendanceStatus = 'present' | 'absent' | 'excused';
+export type RsvpStatus = 'going' | 'not_going' | 'maybe';
+export type FinanceKind = 'income' | 'expense';
+export type ThemePreference = 'light' | 'dark' | 'system';
+
+export type Profile = {
+  id: string;
+  email: string;
+  full_name: string;
+  role: AppRole;
+  is_active: boolean;
+  must_set_password: boolean;
+  theme: ThemePreference;
+  phone: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type Player = {
+  id: string;
+  profile_id: string | null;
+  full_name: string;
+  jersey_number: number | null;
+  position: string | null;
+  height_cm: number | null;
+  weight_kg: number | null;
+  date_of_birth: string | null;
+  email: string | null;
+  phone: string | null;
+  guardian_name: string | null;
+  guardian_phone: string | null;
+  notes: string | null;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+};
+
+export type AcademyEvent = {
+  id: string;
+  title: string;
+  type: EventType;
+  starts_at: string;
+  ends_at: string | null;
+  location: string | null;
+  description: string | null;
+  visible_to_roles: AppRole[];
+  rsvp_enabled: boolean;
+  is_public: boolean;
+  created_by: string | null;
+  created_by_name: string;
+  created_at: string;
+  updated_at: string;
+};
+
+export type EventRsvp = {
+  id: string;
+  event_id: string;
+  profile_id: string;
+  status: RsvpStatus;
+  updated_at: string;
+};
+
+export type AttendanceRow = {
+  id: string;
+  event_id: string;
+  player_id: string;
+  status: AttendanceStatus;
+  note: string | null;
+  recorded_by: string | null;
+  recorded_at: string;
+};
+
+export type MatchStat = {
+  id: string;
+  event_id: string;
+  player_id: string;
+  points: number;
+  kills: number;
+  blocks: number;
+  aces: number;
+  digs: number;
+  assists: number;
+  serve_errors: number;
+  notes: string | null;
+  recorded_by: string | null;
+  created_at: string;
+};
+
+export type Announcement = {
+  id: string;
+  title: string;
+  body: string;
+  pinned: boolean;
+  visible_to_roles: AppRole[];
+  author_id: string | null;
+  author_name: string;
+  created_at: string;
+  updated_at: string;
+};
+
+export type FinanceEntry = {
+  id: string;
+  entry_date: string;
+  kind: FinanceKind;
+  category: string;
+  description: string;
+  amount: number;
+  created_by: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type MonthlySummary = {
+  month: string;
+  year: number;
+  month_number: number;
+  income: number;
+  expenses: number;
+  net: number;
+  entry_count: number;
+};
+
+export type YearlySummary = {
+  year: number;
+  income: number;
+  expenses: number;
+  net: number;
+  entry_count: number;
+};
+
+export type CategorySummary = {
+  year: number;
+  kind: FinanceKind;
+  category: string;
+  total: number;
+};
+
+export type AttendanceStats = {
+  player_id: string;
+  logged: number;
+  present: number;
+  absent: number;
+  excused: number;
+  attendance_pct: number | null;
+};
