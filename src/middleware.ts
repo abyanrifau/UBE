@@ -9,7 +9,7 @@ const isPublic = (pathname: string) =>
 
 /**
  * Refreshes the Supabase session cookie on every request and keeps signed-out
- * visitors out of the app shell. This is a convenience gate — the real
+ * visitors out of the app shell. This is a convenience gate. The real
  * enforcement lives in the RLS policies.
  */
 export async function middleware(request: NextRequest) {
@@ -51,7 +51,7 @@ export async function middleware(request: NextRequest) {
  * Keeps signed-out visitors out of the app shell and signed-in members off
  * the login screen. Returns a redirect, or null to continue.
  *
- * This is a convenience gate — the real enforcement is RLS.
+ * This is a convenience gate. The real enforcement is RLS.
  */
 function gate(request: NextRequest, pathname: string, signedIn: boolean) {
   if (!signedIn && !isPublic(pathname)) {

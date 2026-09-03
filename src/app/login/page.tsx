@@ -17,12 +17,12 @@ export default function LoginPage() {
         <div className="space-y-3 text-[13px] leading-relaxed text-muted">
           <p>
             <span className="font-semibold text-ink">First time here?</span> Sign in with the
-            temporary password you were given — you will be asked to choose your own straight
+            temporary password you were given. You will be asked to choose your own straight
             away.
           </p>
           <p>
-            Forgot your password, or never received one? Ask an admin or your ExCo contact to
-            reset it.
+            Forgot your password, or never received one? Ask the coach or an admin to reset
+            it.
           </p>
           <p>
             <Link href="/" className="text-ink underline-offset-4 hover:underline">

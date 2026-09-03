@@ -23,7 +23,7 @@ type Row = {
 };
 
 /**
- * Per-match numbers. Optional by design — a coach who does not want to log
+ * Per-match numbers. Optional by design. A coach who does not want to log
  * stats can ignore this entirely and use the notes field on the player.
  */
 export function MatchStatsEditor({ eventId, rows }: { eventId: string; rows: Row[] }) {
@@ -58,7 +58,7 @@ export function MatchStatsEditor({ eventId, rows }: { eventId: string; rows: Row
                 <td className="px-3.5 py-2.5">
                   <span className="flex items-center gap-2.5">
                     <span className="w-6 text-right text-[11px] font-bold tabular-nums text-muted">
-                      {row.jersey ?? '—'}
+                      {row.jersey ?? '–'}
                     </span>
                     <span className="truncate font-medium">{row.name}</span>
                   </span>

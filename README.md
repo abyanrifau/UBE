@@ -1,28 +1,29 @@
 # UBE Academy
 
-The internal platform for UBE Academy — a password-protected hub where
-players, the executive committee and the coaching staff handle announcements,
-scheduling, player tracking and finances. The only public page is the
-homepage.
+The internal platform for UBE Academy, a volleyball academy in Hulhumalé,
+Maldives. It is a password-protected hub where players, the executive
+committee and the coaching staff handle announcements, scheduling, player
+tracking and finances. The only public page is the homepage.
 
-Built with **Next.js (App Router)**, **Supabase** (auth + Postgres + row level
-security) and **Tailwind CSS**. Deploys to Vercel as-is.
+Built with **Next.js (App Router)**, **Supabase** (auth, Postgres and row
+level security) and **Tailwind CSS**. Deploys to Vercel as-is.
 
 ---
 
 ## What's in it
 
-| Area                 | Who                            | What                                                                                     |
-| -------------------- | ------------------------------ | ---------------------------------------------------------------------------------------- |
-| **Homepage**         | Public                         | Instagram grid, academy info, contact, opt-in public fixtures, Log in                     |
-| **Dashboard**        | Everyone signed in             | Announcements board with per-role audiences, next four events with RSVP, role-aware stats |
-| **Schedule**         | Everyone signed in             | List + month calendar, five event types, RSVP, attendance register, match stats           |
-| **Players**          | Coach, ExCo, Treasurer, Admin  | Roster, full profiles, attendance % per player, per-match stats, coach notes              |
-| **My Profile**       | Everyone signed in             | Own account, theme, password change, and own player record if linked                      |
-| **Financials**       | Treasurer, ExCo, Admin         | Entries, auto-rolled monthly and yearly statements, category breakdown, charts            |
-| **Manage Accounts**  | Admin                          | Create logins, assign roles, deactivate, reset passwords, link to roster rows             |
+| Area                | Who                            | What                                                                                      |
+| ------------------- | ------------------------------ | ----------------------------------------------------------------------------------------- |
+| **Homepage**        | Public                         | Instagram grid, academy info, apply-to-join form, opt-in public fixtures, Log in            |
+| **Dashboard**       | Everyone signed in             | Announcements board with per-role audiences, next four events with RSVP, role-aware stats   |
+| **Schedule**        | Everyone signed in             | List and month calendar, five event types, RSVP, attendance register, match stats           |
+| **Players**         | Coach, ExCo, Treasurer, Admin  | Roster, full profiles, attendance percentage per player, per-match stats, coach notes       |
+| **My Profile**      | Everyone signed in             | Own account, theme, password change, and own player record if linked                        |
+| **Financials**      | Coach, Treasurer, ExCo, Admin  | Entries, auto-rolled monthly and yearly statements, category breakdown, charts               |
+| **Manage Accounts** | Coach, Admin                   | Create logins, assign roles, deactivate, reset passwords, link to roster rows                |
 
-Full permission matrix: [`docs/PERMISSIONS.md`](docs/PERMISSIONS.md).
+The Coach owns the academy, so Coach and Admin have identical reach. Full
+matrix: [`docs/PERMISSIONS.md`](docs/PERMISSIONS.md).
 
 ---
 
@@ -36,9 +37,8 @@ echo "NEXT_PUBLIC_DEMO_MODE=true" >> .env.local
 npm run dev
 ```
 
-Sign in at <http://localhost:3000/login> — the screen lists five accounts, one
-per role. Password is `ubedemo` for all of them; `admin@ube.academy` gets you
-everything.
+Sign in at <http://localhost:3000/login>. The screen lists five accounts, one
+per role. Password is `ubedemo` for all of them.
 
 Sign in as `player@ube.academy` to watch the restrictions work: Financials and
 the roster are simply not reachable. Full details in
@@ -60,15 +60,15 @@ npm install
 
 ### 2. Create a Supabase project
 
-At [supabase.com](https://supabase.com), then **SQL Editor → New query** and
-run the whole of:
+At [supabase.com](https://supabase.com), then **SQL Editor**, **New query**,
+and run the whole of:
 
 ```
 supabase/migrations/0001_init.sql
 ```
 
 That creates every table, the role helper functions, all RLS policies and the
-rollup views. It is idempotent — safe to re-run.
+rollup views. It is idempotent, so it is safe to re-run.
 
 ### 3. Environment variables
 
@@ -76,23 +76,25 @@ rollup views. It is idempotent — safe to re-run.
 cp .env.example .env.local
 ```
 
-Fill in from **Supabase → Project Settings → API**:
+Fill in from **Supabase**, **Project Settings**, **API**:
 
-| Variable                        | Where it comes from        | Notes                                        |
-| ------------------------------- | -------------------------- | -------------------------------------------- |
-| `NEXT_PUBLIC_SUPABASE_URL`      | Project URL                |                                               |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | `anon` `public` key        | Safe in the browser; RLS constrains it        |
-| `SUPABASE_SERVICE_ROLE_KEY`     | `service_role` `secret` key | **Server only.** Bypasses RLS. Never prefix with `NEXT_PUBLIC_` |
-| `INSTAGRAM_ACCESS_TOKEN`        | See below                  | Optional                                      |
-| `NEXT_PUBLIC_CURRENCY`          | e.g. `SGD`, `IDR`, `USD`   | ISO 4217. **Set this** — the default is `USD` |
-| `NEXT_PUBLIC_TIME_ZONE`         | e.g. `Asia/Singapore`      | IANA zone the calendar is written in          |
+| Variable                        | Where it comes from         | Notes                                                            |
+| ------------------------------- | --------------------------- | ---------------------------------------------------------------- |
+| `NEXT_PUBLIC_SUPABASE_URL`      | Project URL                 |                                                                   |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | `anon` `public` key         | Safe in the browser, RLS constrains it                            |
+| `SUPABASE_SERVICE_ROLE_KEY`     | `service_role` `secret` key | **Server only.** Bypasses RLS. Never prefix with `NEXT_PUBLIC_`   |
+| `INSTAGRAM_ACCESS_TOKEN`        | See below                   | Optional                                                          |
+
+The academy details, currency (`MVR`), locale (`en-MV`) and time zone
+(`Indian/Maldives`) are already set in `.env.example` and in
+`src/lib/config.ts`.
 
 ### 4. Create the first admin
 
 There is no public sign-up, so the first account is made by hand:
 
-1. **Supabase → Authentication → Users → Add user.** Enter your email and a
-   temporary password, and tick **Auto Confirm User**.
+1. **Supabase**, **Authentication**, **Users**, **Add user**. Enter your email
+   and a temporary password, and tick **Auto Confirm User**.
 2. Open `supabase/bootstrap_admin.sql`, change the email at the top, run it.
 
 ### 5. Run it
@@ -106,66 +108,65 @@ password, then you can create everyone else from **Accounts**.
 
 ### 6. Turn demo mode off
 
-If you switched it on, set `NEXT_PUBLIC_DEMO_MODE=false` (or delete the line)
+If you switched it on, set `NEXT_PUBLIC_DEMO_MODE=false` or delete the line,
 so the app talks to Supabase instead of the sample data.
 
 ### 7. Instagram (optional)
 
-The homepage feed needs an access token you have to generate yourself — the
-old Basic Display API was retired in December 2024. Step-by-step instructions
-are in [`docs/INSTAGRAM.md`](docs/INSTAGRAM.md). **Without a token the site
-works fine**; the grid shows a placeholder and a link to Instagram.
+The homepage feed needs an access token you have to generate yourself, because
+the old Basic Display API was retired in December 2024. Step-by-step
+instructions are in [`docs/INSTAGRAM.md`](docs/INSTAGRAM.md). **Without a token
+the site works fine**, the grid shows a placeholder and a link to Instagram.
 
 ---
 
 ## Deploying to Vercel
 
 1. Push this repo to GitHub.
-2. **Vercel → New Project → Import**. The framework is detected automatically;
-   no build settings to change.
-3. Add the same environment variables under **Settings → Environment
+2. **Vercel**, **New Project**, **Import**. The framework is detected
+   automatically, there are no build settings to change.
+3. Add the same environment variables under **Settings**, **Environment
    Variables**. `SUPABASE_SERVICE_ROLE_KEY` and `INSTAGRAM_ACCESS_TOKEN` must
-   *not* be `NEXT_PUBLIC_`.
+   *not* be prefixed with `NEXT_PUBLIC_`.
 4. Deploy.
 
-Nothing else is required — no separate backend, no cron jobs.
+Nothing else is required. No separate backend, no cron jobs.
 
 ---
 
 ## How accounts work
 
-Admins create accounts; nobody signs themselves up.
+The Coach or an Admin creates accounts. Nobody signs themselves up.
 
-1. **Accounts → Create account.** Enter a name, email and role.
-2. The app generates a readable temporary password (`Rally-setter-4821`) and
-   shows it **once**, with a copy button. Hand it over however you like.
+1. **Accounts**, **Create account**. Enter a name, email and role.
+2. The app generates a readable temporary password such as `Rally-setter-4821`
+   and shows it **once**, with a copy button. Hand it over however you like.
 3. On first sign-in the member is sent to `/set-password` and cannot reach the
-   rest of the app until they have chosen their own. From that point no admin
-   knows their password.
+   rest of the app until they have chosen their own. From that point nobody
+   else knows their password.
 4. **Reset password** issues a fresh temporary one and signs the member out
    everywhere.
 5. **Deactivate** blocks sign-in and ends existing sessions, without deleting
    any attendance or stats history.
 
 Player logins can be linked to a roster row, which is what lets a player see
-their own attendance and stats — and only their own.
+their own attendance and stats, and only their own.
 
 ---
 
 ## Verifying the access rules
 
-The brief asks that restrictions be real, not cosmetic. They are enforced by
-Postgres RLS policies, so a hand-written `fetch` gets the same zero rows the
-UI does.
+The restrictions are enforced by Postgres RLS policies, so a hand-written
+`fetch` gets the same zero rows the UI does.
 
 ```
 supabase/rls_smoke_test.sql
 ```
 
 Run that in the SQL editor once you have a few accounts and finance entries.
-It impersonates each role below the API layer and prints PASS/FAIL for every
-rule, including *"Coach cannot read finance_entries"* and *"Player cannot read
-the monthly summary view"*.
+It impersonates each role below the API layer and prints PASS or FAIL for
+every rule, including *"Player cannot read the monthly summary view"* and
+*"Coach (academy owner) can read finance_entries"*.
 
 ---
 
@@ -174,30 +175,30 @@ the monthly summary view"*.
 ```
 UBE/
 ├── public/
-│   └── brand/            crest, black + white, one per theme
+│   └── brand/            crest, black and white, one per theme
 ├── src/
-│   ├── app/              routes — App Router
+│   ├── app/              routes, App Router
 │   │   ├── page.tsx          public homepage
 │   │   ├── login/            sign in
 │   │   ├── set-password/     first-login password flow
 │   │   └── (app)/            everything behind auth
 │   │       ├── dashboard/  schedule/  players/
 │   │       ├── profile/    financials/  accounts/
-│   ├── components/       UI — shell, forms, charts, calendar, editors
+│   ├── components/       UI: shell, forms, charts, calendar, editors
 │   ├── lib/
-│   │   ├── actions/          server actions (all writes)
+│   │   ├── actions/          server actions, all writes
 │   │   ├── demo/             sample-data backend for demo mode
-│   │   ├── supabase/         browser / server / admin / public clients
+│   │   ├── supabase/         browser, server, admin and public clients
 │   │   ├── queries/          shared reads
 │   │   ├── roles.ts          the permission matrix, mirrored from RLS
 │   │   ├── format.ts         money, dates, time zone handling
 │   │   └── config.ts         academy details from env
-│   └── middleware.ts     session refresh + route guard
+│   └── middleware.ts     session refresh and route guard
 ├── supabase/
-│   ├── migrations/       0001_init.sql — schema, RLS, views
+│   ├── migrations/       0001_init.sql, schema, RLS, views
 │   ├── bootstrap_admin.sql
 │   └── rls_smoke_test.sql
-└── docs/                 INSTAGRAM.md, PERMISSIONS.md
+└── docs/                 DEMO.md, INSTAGRAM.md, PERMISSIONS.md
 ```
 
 `package.json`, `next.config.mjs`, `tsconfig.json`, `tailwind.config.ts` and
@@ -208,17 +209,17 @@ all require them there.
 
 ## Design
 
-The crest ships as two transparent PNGs — black artwork for light mode, white
-for dark — swapped with CSS on the `.dark` class, so the right one is painted
-on the first frame with no flash.
+The crest ships as two transparent PNGs, black artwork for light mode and
+white for dark, swapped with CSS on the `.dark` class so the right one is
+painted on the first frame with no flash.
 
-Greyscale only — no accent colours anywhere. Hierarchy comes from contrast,
-weight, spacing and hairline rules. Inter throughout, tabular figures for every
-number. Light and dark themes are chosen with a Light / Dark / Auto control,
-remembered in `localStorage` for the device and mirrored to the member's
-profile so a new phone starts in the right theme.
+Greyscale only, no accent colours anywhere. Hierarchy comes from contrast,
+weight, spacing and hairline rules. Inter throughout, tabular figures for
+every number. Light and dark themes are chosen with a Light, Dark, Auto
+control, remembered in `localStorage` for the device and mirrored to the
+member's profile so a new phone starts in the right theme.
 
-Phones get a fixed bottom tab bar with labelled icons; tables collapse to
+Phones get a fixed bottom tab bar with labelled icons, and tables collapse to
 cards. The charts in Financials are hand-drawn SVG using `currentColor`, so
 they invert with the theme and pull in no charting library.
 
@@ -226,13 +227,13 @@ they invert with the theme and pull in no charting library.
 
 ## Scripts
 
-| Command             | Does                                     |
-| ------------------- | ---------------------------------------- |
-| `npm run dev`       | Dev server on :3000                      |
-| `npm run build`     | Production build                         |
-| `npm run start`     | Serve the production build               |
-| `npm run typecheck` | `tsc --noEmit`                           |
-| `npm run lint`      | Next.js ESLint                           |
+| Command             | Does                       |
+| ------------------- | -------------------------- |
+| `npm run dev`       | Dev server on :3000        |
+| `npm run build`     | Production build           |
+| `npm run start`     | Serve the production build |
+| `npm run typecheck` | `tsc --noEmit`             |
+| `npm run lint`      | Next.js ESLint             |
 
 ---
 
@@ -240,13 +241,13 @@ they invert with the theme and pull in no charting library.
 
 - `.env.local` is git-ignored. Never commit `SUPABASE_SERVICE_ROLE_KEY`.
 - `anon` is revoked from every table. The only object an anonymous visitor can
-  read is the `public_events` view — four columns, and only for events an
+  read is the `public_events` view: four columns, and only for events an
   editor ticked "Show on the public homepage".
 - Rollup views are declared `security_invoker = on`, so they honour the
-  caller's RLS instead of the view owner's. A coach selecting
+  caller's RLS instead of the view owner's. A player selecting
   `finance_monthly_summary` gets nothing.
-- `profiles` has a trigger blocking non-admins from changing their own role,
+- `profiles` has a trigger blocking non-owners from changing their own role,
   active flag or email, even though they may edit their name and phone.
-- An admin cannot demote or deactivate themselves — that needs another admin.
+- An owner cannot demote or deactivate themselves. That needs the other owner.
 - `NEXT_PUBLIC_DEMO_MODE` bypasses authentication entirely. It is off by
-  default and shows a banner while on; never set it in production.
+  default and shows a banner while on. Never set it in production.

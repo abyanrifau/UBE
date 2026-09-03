@@ -131,7 +131,7 @@ export function PlayerForm({
         label="Coach notes"
         rows={4}
         defaultValue={player?.notes ?? ''}
-        placeholder="Technical focus, injuries, availability — anything the coaching staff should know."
+        placeholder="Technical focus, injuries, availability, anything the coaching staff should know."
       />
 
       {accounts && accounts.length > 0 && (

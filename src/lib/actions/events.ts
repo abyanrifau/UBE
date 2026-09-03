@@ -100,7 +100,7 @@ export async function deleteEvent(id: string): Promise<ActionResult> {
 }
 
 /* ------------------------------------------------------------------ */
-/* RSVP — a user may only ever write their own row (RLS enforces it)   */
+/* RSVP: a user may only ever write their own row (RLS enforces it)  */
 /* ------------------------------------------------------------------ */
 
 export async function setRsvp(eventId: string, status: RsvpStatus): Promise<ActionResult> {

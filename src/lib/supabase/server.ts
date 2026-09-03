@@ -15,7 +15,7 @@ export function createClient(): AppSupabaseClient {
   const cookieStore = cookies();
 
   // Demo mode swaps the whole database for an in-memory fake. See
-  // src/lib/demo/config.ts — this is an auth bypass and is off by default.
+  // src/lib/demo/config.ts. This is an auth bypass and is off by default.
   if (IS_DEMO) {
     const demoUserId = cookieStore.get(DEMO_COOKIE)?.value ?? null;
     return createDemoClient(demoUserId) as unknown as AppSupabaseClient;

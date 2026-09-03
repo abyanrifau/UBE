@@ -14,7 +14,7 @@ import {
   updateAnnouncement,
 } from '@/lib/actions/announcements';
 
-const ALL = 5; // number of roles — used to spot an "everyone" audience
+const ALL = 5; // number of roles, used to spot an "everyone" audience
 
 export function AnnouncementComposer() {
   return (
@@ -61,7 +61,7 @@ export function AnnouncementList({
         title="No announcements yet"
         description={
           canEdit
-            ? 'Post the first one — it will show up here for everyone you send it to.'
+            ? 'Post the first one. It will show up here for everyone you send it to.'
             : 'When ExCo or your coach posts something, it lands here.'
         }
       />

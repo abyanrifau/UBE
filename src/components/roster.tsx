@@ -114,7 +114,7 @@ export function Roster({
                 {filtered.map((p) => (
                   <tr key={p.id} className="transition-colors hover:bg-subtle">
                     <td className="px-3 py-3 text-center text-[13px] font-bold tabular-nums text-muted">
-                      {p.jersey_number ?? '—'}
+                      {p.jersey_number ?? '–'}
                     </td>
                     <td className="px-3 py-3">
                       <Link href={`/players/${p.id}`} className="font-semibold hover:underline">
@@ -126,12 +126,12 @@ export function Roster({
                         </span>
                       )}
                     </td>
-                    <td className="px-3 py-3 text-muted">{p.position ?? '—'}</td>
+                    <td className="px-3 py-3 text-muted">{p.position ?? '–'}</td>
                     <td className="px-3 py-3 text-right tabular-nums text-muted">
-                      {age(p.date_of_birth) ?? '—'}
+                      {age(p.date_of_birth) ?? '–'}
                     </td>
                     <td className="px-3 py-3 text-right tabular-nums text-muted">
-                      {p.height_cm ? `${p.height_cm} cm` : '—'}
+                      {p.height_cm ? `${p.height_cm} cm` : '–'}
                     </td>
                     <td className="px-3 py-3">
                       <InlineMeter value={p.attendance_pct} logged={p.logged} />
@@ -149,7 +149,7 @@ export function Roster({
                 <Link href={`/players/${p.id}`} className="card block p-4 transition-colors hover:bg-subtle">
                   <div className="flex items-start gap-3.5">
                     <span className="flex h-11 w-11 shrink-0 items-center justify-center border border-line text-[15px] font-bold tabular-nums">
-                      {p.jersey_number ?? '—'}
+                      {p.jersey_number ?? '–'}
                     </span>
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-[15px] font-bold">{p.full_name}</p>

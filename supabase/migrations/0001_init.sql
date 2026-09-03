@@ -1,5 +1,5 @@
 -- =====================================================================
--- UBE Academy — schema, roles and row level security
+-- UBE Academy: schema, roles and row level security
 -- Run this in the Supabase SQL editor (or `supabase db push`).
 -- =====================================================================
 
@@ -29,7 +29,7 @@ do $$ begin
 exception when duplicate_object then null; end $$;
 
 -- ---------------------------------------------------------------------
--- profiles — one row per auth user
+-- profiles: one row per auth user
 -- ---------------------------------------------------------------------
 create table if not exists public.profiles (
   id                  uuid primary key references auth.users(id) on delete cascade,
@@ -45,7 +45,7 @@ create table if not exists public.profiles (
 );
 
 -- ---------------------------------------------------------------------
--- players — roster row, optionally linked to a login
+-- players: roster row, optionally linked to a login
 -- ---------------------------------------------------------------------
 create table if not exists public.players (
   id                uuid primary key default gen_random_uuid(),
@@ -68,7 +68,7 @@ create table if not exists public.players (
 create index if not exists players_active_idx on public.players(is_active, full_name);
 
 -- ---------------------------------------------------------------------
--- events — practices, matches, tournaments, meetings, general events
+-- events: practices, matches, tournaments, meetings, general events
 -- visible_to_roles decides who may read the row (enforced by RLS)
 -- ---------------------------------------------------------------------
 create table if not exists public.events (
@@ -104,7 +104,7 @@ create table if not exists public.event_rsvps (
 );
 
 -- ---------------------------------------------------------------------
--- attendance — one row per (event, player)
+-- attendance: one row per (event, player)
 -- ---------------------------------------------------------------------
 create table if not exists public.attendance (
   id           uuid primary key default gen_random_uuid(),
@@ -119,7 +119,7 @@ create table if not exists public.attendance (
 create index if not exists attendance_player_idx on public.attendance(player_id);
 
 -- ---------------------------------------------------------------------
--- match_stats — optional per-match numbers
+-- match_stats: optional per-match numbers
 -- ---------------------------------------------------------------------
 create table if not exists public.match_stats (
   id            uuid primary key default gen_random_uuid(),
@@ -157,7 +157,7 @@ create table if not exists public.announcements (
 create index if not exists announcements_created_idx on public.announcements(pinned desc, created_at desc);
 
 -- ---------------------------------------------------------------------
--- finance_entries — RESTRICTED
+-- finance_entries: RESTRICTED
 -- ---------------------------------------------------------------------
 create table if not exists public.finance_entries (
   id            uuid primary key default gen_random_uuid(),
@@ -199,34 +199,42 @@ language sql stable security definer set search_path = public as $fn$
   select public.has_any_role(array['admin']::public.app_role[])
 $fn$;
 
+-- Owners hold the academy itself. The Coach owns UBE, so Coach and Admin
+-- have identical reach: every table, including the financial ones and
+-- account management.
+create or replace function public.is_owner() returns boolean
+language sql stable security definer set search_path = public as $fn$
+  select public.has_any_role(array['admin','coach']::public.app_role[])
+$fn$;
+
 -- Anyone with a back-office seat.
 create or replace function public.is_staff() returns boolean
 language sql stable security definer set search_path = public as $fn$
-  select public.has_any_role(array['admin','treasurer','exco','coach']::public.app_role[])
+  select public.has_any_role(array['admin','coach','treasurer','exco']::public.app_role[])
 $fn$;
 
 -- Roster, attendance and scheduling editors.
 create or replace function public.can_manage_roster() returns boolean
 language sql stable security definer set search_path = public as $fn$
-  select public.has_any_role(array['admin','treasurer','exco','coach']::public.app_role[])
+  select public.has_any_role(array['admin','coach','treasurer','exco']::public.app_role[])
 $fn$;
 
 -- Announcement authors.
 create or replace function public.can_post_announcements() returns boolean
 language sql stable security definer set search_path = public as $fn$
-  select public.has_any_role(array['admin','treasurer','exco','coach']::public.app_role[])
+  select public.has_any_role(array['admin','coach','treasurer','exco']::public.app_role[])
 $fn$;
 
--- Finance READ: treasurer, exco, admin. Never coach, never player.
+-- Finance READ: owners, treasurer and exco. Never a player.
 create or replace function public.can_view_finance() returns boolean
 language sql stable security definer set search_path = public as $fn$
-  select public.has_any_role(array['admin','treasurer','exco']::public.app_role[])
+  select public.has_any_role(array['admin','coach','treasurer','exco']::public.app_role[])
 $fn$;
 
--- Finance WRITE: treasurer and admin only.
+-- Finance WRITE: owners and the treasurer. ExCo reads only.
 create or replace function public.can_manage_finance() returns boolean
 language sql stable security definer set search_path = public as $fn$
-  select public.has_any_role(array['admin','treasurer']::public.app_role[])
+  select public.has_any_role(array['admin','coach','treasurer']::public.app_role[])
 $fn$;
 
 -- The roster row belonging to the signed-in user, if any.
@@ -277,12 +285,12 @@ create trigger on_auth_user_created
   after insert on auth.users
   for each row execute function public.handle_new_user();
 
--- A non-admin may edit their own name/phone/theme but never their role,
--- their active flag, or their email.
+-- Anyone who is not an owner may edit their own name/phone/theme but never
+-- their role, their active flag, or their email.
 create or replace function public.guard_profile_privileges() returns trigger
 language plpgsql security definer set search_path = public as $fn$
 begin
-  if public.is_admin() then
+  if public.is_owner() then
     return new;
   end if;
   if new.role is distinct from old.role
@@ -322,16 +330,16 @@ create policy profiles_select on public.profiles for select to authenticated
 
 drop policy if exists profiles_update_self on public.profiles;
 create policy profiles_update_self on public.profiles for update to authenticated
-  using (id = auth.uid() or public.is_admin())
-  with check (id = auth.uid() or public.is_admin());
+  using (id = auth.uid() or public.is_owner())
+  with check (id = auth.uid() or public.is_owner());
 
 drop policy if exists profiles_insert_admin on public.profiles;
 create policy profiles_insert_admin on public.profiles for insert to authenticated
-  with check (public.is_admin());
+  with check (public.is_owner());
 
 drop policy if exists profiles_delete_admin on public.profiles;
 create policy profiles_delete_admin on public.profiles for delete to authenticated
-  using (public.is_admin());
+  using (public.is_owner());
 
 -- players --------------------------------------------------------------
 drop policy if exists players_select on public.players;
@@ -378,7 +386,7 @@ create policy rsvps_update_self on public.event_rsvps for update to authenticate
 
 drop policy if exists rsvps_delete_self on public.event_rsvps;
 create policy rsvps_delete_self on public.event_rsvps for delete to authenticated
-  using (profile_id = auth.uid() or public.is_admin());
+  using (profile_id = auth.uid() or public.is_owner());
 
 -- attendance -----------------------------------------------------------
 drop policy if exists attendance_select on public.attendance;
@@ -410,7 +418,7 @@ create policy announcements_write on public.announcements for all to authenticat
   using (public.can_post_announcements())
   with check (public.can_post_announcements());
 
--- finance_entries — the locked room ------------------------------------
+-- finance_entries: restricted to owners, treasurer and exco -------------
 drop policy if exists finance_select on public.finance_entries;
 create policy finance_select on public.finance_entries for select to authenticated
   using (public.can_view_finance());

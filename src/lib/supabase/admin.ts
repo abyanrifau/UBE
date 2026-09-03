@@ -3,7 +3,7 @@ import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { IS_DEMO } from '@/lib/demo/config';
 import { createDemoAdminClient } from '@/lib/demo/admin';
 
-// Supabase’s own loose schema typing — the app has no generated Database type.
+// Supabase ships no generated Database type for this project.
 type AdminClient = SupabaseClient<any, 'public', any>;
 
 /**
@@ -19,7 +19,7 @@ export function createAdminClient(): AdminClient {
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!key) {
     throw new Error(
-      'SUPABASE_SERVICE_ROLE_KEY is not set. Account management needs it — see README.',
+      'SUPABASE_SERVICE_ROLE_KEY is not set. Account management needs it. See README.',
     );
   }
   return createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, key, {

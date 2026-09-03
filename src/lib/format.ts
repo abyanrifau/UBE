@@ -28,7 +28,7 @@ export function signedMoney(value: number): string {
 }
 
 /* ------------------------------------------------------------------ */
-/* Dates — always rendered in the academy's configured time zone so     */
+/* Dates: always rendered in the academy's configured time zone so    */
 /* server and client agree and nothing hydrates differently.           */
 /* ------------------------------------------------------------------ */
 

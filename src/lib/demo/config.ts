@@ -1,5 +1,5 @@
 /**
- * Demo mode — a placeholder backend so the app can be explored before a
+ * Demo mode: a placeholder backend so the app can be explored before a
  * Supabase project exists.
  *
  * When NEXT_PUBLIC_DEMO_MODE=true, every Supabase client in the app is
@@ -14,7 +14,7 @@
 
 export const IS_DEMO = process.env.NEXT_PUBLIC_DEMO_MODE === 'true';
 
-/** Same password for every demo account — it is not protecting anything. */
+/** Same password for every demo account. It is not protecting anything. */
 export const DEMO_PASSWORD = 'ubedemo';
 
 /** Readable cookie (not httpOnly) so the browser shim can set it directly. */

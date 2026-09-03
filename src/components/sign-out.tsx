@@ -1,11 +1,9 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 
 function useSignOut() {
-  const router = useRouter();
   const [busy, setBusy] = useState(false);
 
   return {
@@ -14,8 +12,9 @@ function useSignOut() {
       setBusy(true);
       const supabase = createClient();
       await supabase.auth.signOut();
-      router.refresh();
-      router.replace('/login');
+      // Hard navigation: it drops Next's client Router Cache, so nothing
+      // rendered for the signed-out member can reappear for the next one.
+      window.location.assign('/login');
     },
   };
 }

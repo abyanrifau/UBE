@@ -137,15 +137,15 @@ export default async function EventPage({ params }: { params: { id: string } }) 
             {event.description && <p className="prose-body mt-5">{event.description}</p>}
 
             <dl className="mt-6 divide-line border-t border-line">
-              <KeyValue label="Location" value={event.location ?? '—'} />
+              <KeyValue label="Location" value={event.location ?? '–'} />
               <KeyValue label="Starts" value={formatTime(event.starts_at)} />
               {event.ends_at && <KeyValue label="Ends" value={formatTime(event.ends_at)} />}
-              <KeyValue label="Added by" value={event.created_by_name || '—'} />
+              <KeyValue label="Added by" value={event.created_by_name || '–'} />
             </dl>
           </section>
 
           {/* -------------------------------------------------------- */}
-          {/* Attendance — staff only                                   */}
+          {/* Attendance: staff only                                  */}
           {/* -------------------------------------------------------- */}
           {canEditRoster && (
             <section>
@@ -163,7 +163,7 @@ export default async function EventPage({ params }: { params: { id: string } }) 
           )}
 
           {/* -------------------------------------------------------- */}
-          {/* Match stats — matches and tournaments only                */}
+          {/* Match stats: matches and tournaments only               */}
           {/* -------------------------------------------------------- */}
           {canEditRoster && isCompetitive && (
             <section>

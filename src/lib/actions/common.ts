@@ -11,12 +11,12 @@ export function friendlyError(error: { message: string; code?: string } | null):
   if (!error) return 'Something went wrong.';
   const code = error.code ?? '';
   if (code === '42501' || /row-level security/i.test(error.message)) {
-    return 'Your role does not allow that. If you think it should, ask an admin.';
+    return 'Your role does not allow that. If you think it should, ask the coach or an admin.';
   }
   if (code === '23505') return 'That already exists.';
   if (code === '23503') return 'That referenced a record which no longer exists.';
   if (/not allowed to change privileged/i.test(error.message)) {
-    return 'Only an admin can change roles or account status.';
+    return 'Only the coach or an admin can change roles or account status.';
   }
   return error.message;
 }

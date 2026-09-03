@@ -18,7 +18,7 @@ export default async function FinancialsPage({
 }) {
   const { profile } = await requireSession();
 
-  // A coach or player never gets here — and if they forced the URL, every
+  // A coach is an owner and belongs here. A player never reaches it, and
   // query below would come back empty because the RLS policy excludes them.
   if (!canViewFinance(profile.role)) redirect('/dashboard');
 
@@ -88,11 +88,11 @@ export default async function FinancialsPage({
         }
       />
 
-      <RestrictedBanner audience="the Treasurer, ExCo and Admins" />
+      <RestrictedBanner audience="the Coach, Treasurer, ExCo and Admins" />
 
       {!canEdit && (
         <p className="mb-6 text-[13px] text-muted">
-          You have read access. Only the Treasurer and Admins can add or change entries.
+          You have read access. Only the Coach, Treasurer and Admins can add or change entries.
         </p>
       )}
 
@@ -152,13 +152,13 @@ export default async function FinancialsPage({
                     <tr key={row.month} className={empty ? 'text-muted' : ''}>
                       <td className="px-3.5 py-2.5 font-medium">{MONTH_NAMES[i]}</td>
                       <td className="px-3.5 py-2.5 text-right tabular-nums">
-                        {row.income ? money(row.income) : '—'}
+                        {row.income ? money(row.income) : '–'}
                       </td>
                       <td className="px-3.5 py-2.5 text-right tabular-nums">
-                        {row.expenses ? money(row.expenses) : '—'}
+                        {row.expenses ? money(row.expenses) : '–'}
                       </td>
                       <td className="px-3.5 py-2.5 text-right font-semibold tabular-nums">
-                        {empty ? '—' : signedMoney(row.net)}
+                        {empty ? '–' : signedMoney(row.net)}
                       </td>
                       <td className="px-3.5 py-2.5 text-right tabular-nums">
                         {signedMoney(running)}

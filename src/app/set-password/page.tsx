@@ -19,7 +19,7 @@ export default async function SetPasswordPage() {
       title={first ? 'Choose your password' : 'Change your password'}
       description={
         first
-          ? 'Your account was created by an admin with a temporary password. Pick your own now — nobody else will know it.'
+          ? 'Your account was created by an admin with a temporary password. Pick your own now. Nobody else will know it.'
           : 'Pick a new password for your account.'
       }
       footer={

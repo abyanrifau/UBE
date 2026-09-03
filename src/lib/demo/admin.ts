@@ -8,8 +8,8 @@ import type { AppRole, Profile } from '@/lib/types';
  * the store's write checks pass, and it adds the `auth.admin` surface that
  * src/lib/actions/accounts.ts calls.
  *
- * Callers still go through assertAdmin() first, exactly as they do against
- * real Supabase — the demo does not skip that check.
+ * Callers still go through assertOwner() first, exactly as they do against
+ * real Supabase. The demo does not skip that check.
  */
 export function createDemoAdminClient() {
   const base = createDemoClient(PROFILE_IDS.admin);

@@ -50,7 +50,7 @@ export default async function AccountsPage() {
         description="Create logins, assign roles and hand out temporary passwords."
       />
 
-      <RestrictedBanner audience="Admins" />
+      <RestrictedBanner audience="the Coach and Admins" />
 
       <section className="mb-8">
         <SectionTitle>Active accounts by role</SectionTitle>

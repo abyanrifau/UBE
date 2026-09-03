@@ -123,7 +123,7 @@ export function RestrictedBanner({ audience }: { audience: string }) {
         <path d="M8 10V7a4 4 0 0 1 8 0v3" />
       </svg>
       <span>
-        Restricted — visible to {audience} only. Enforced by database policy, not just this page.
+        Restricted to {audience}. Enforced by database policy, not just this page.
       </span>
     </div>
   );
@@ -153,7 +153,7 @@ export function KeyValue({ label, value }: { label: string; value: ReactNode }) 
   return (
     <div className="flex items-baseline justify-between gap-4 py-2.5">
       <dt className="shrink-0 text-[13px] text-muted">{label}</dt>
-      <dd className="min-w-0 break-words text-right text-[14px] font-medium">{value ?? '—'}</dd>
+      <dd className="min-w-0 break-words text-right text-[14px] font-medium">{value ?? '–'}</dd>
     </div>
   );
 }
@@ -166,7 +166,7 @@ export function Meter({ value, label }: { value: number | null; label?: string }
       <div className="mb-1.5 flex items-baseline justify-between">
         <span className="text-[13px] text-muted">{label ?? 'Attendance'}</span>
         <span className="text-[15px] font-bold tabular-nums">
-          {value === null ? '—' : `${pct}%`}
+          {value === null ? '–' : `${pct}%`}
         </span>
       </div>
       <div className="h-2 w-full border border-line bg-subtle" role="presentation">

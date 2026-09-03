@@ -39,7 +39,7 @@ export default async function ProfilePage() {
     <>
       <PageHeader
         title="My Profile"
-        description="Your account, and — if you are on the roster — your own player record."
+        description="Your account, plus your own player record if you are on the roster."
       />
 
       <div className="mb-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_300px]">
@@ -58,7 +58,7 @@ export default async function ProfilePage() {
             </dl>
           </div>
           <p className="mt-3 text-[13px] leading-relaxed text-muted">
-            {ROLE_BLURB[profile.role]} Only an admin can change your role.
+            {ROLE_BLURB[profile.role]} Only the coach or an admin can change your role.
           </p>
         </aside>
       </div>

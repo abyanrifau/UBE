@@ -267,7 +267,7 @@ export function ConfirmButton({
 }
 
 /* ------------------------------------------------------------------ */
-/* Disclosure — used for "new event", "add entry" and edit panels       */
+/* Disclosure: used for "new event", "add entry" and edit panels      */
 /* ------------------------------------------------------------------ */
 
 export function Disclosure({

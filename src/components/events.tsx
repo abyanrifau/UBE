@@ -249,7 +249,7 @@ export function EventForm({
         <Checkbox
           name="is_public"
           label="Show on the public homepage"
-          hint="Only the title, date and location are exposed — never the description."
+          hint="Only the title, date and location are exposed. Never the description."
           defaultChecked={event?.is_public ?? false}
         />
       </div>

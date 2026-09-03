@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { Notice } from '@/components/ui';
 
@@ -23,7 +22,6 @@ function strength(pw: string) {
 }
 
 export function SetPasswordForm({ email }: { email: string }) {
-  const router = useRouter();
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
   const [show, setShow] = useState(false);
@@ -64,8 +62,7 @@ export function SetPasswordForm({ email }: { email: string }) {
       return;
     }
 
-    router.refresh();
-    router.replace('/dashboard');
+    window.location.assign('/dashboard');
   }
 
   return (

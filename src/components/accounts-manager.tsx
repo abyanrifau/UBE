@@ -336,7 +336,7 @@ function CredentialHandover({
       <p className="eyebrow">Hand these over now</p>
       <p className="mt-2 text-[14px] leading-relaxed">
         This temporary password is shown <strong>once</strong> and is not stored anywhere you can
-        read it again. Send it to the member — they will be asked to choose their own password the
+        read it again. Send it to the member. They will be asked to choose their own password the
         first time they sign in.
       </p>
 
@@ -370,7 +370,7 @@ function CredentialHandover({
           {copied ? 'Copied' : 'Copy credentials'}
         </button>
         <button type="button" className="btn-ghost btn-sm" onClick={onDismiss}>
-          Done — hide this
+          Done, hide this
         </button>
       </div>
     </div>

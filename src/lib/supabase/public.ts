@@ -2,11 +2,11 @@ import { createClient as createSupabaseClient, type SupabaseClient } from '@supa
 import { IS_DEMO } from '@/lib/demo/config';
 import { createDemoClient } from '@/lib/demo/client';
 
-// Supabase’s own loose schema typing — the app has no generated Database type.
+// Supabase ships no generated Database type for this project.
 type PublicClient = SupabaseClient<any, 'public', any>;
 
 /**
- * Anonymous client with no session attached — used only by the public
+ * Anonymous client with no session attached, used only by the public
  * homepage. `anon` has been revoked from every table in the schema, so the
  * one thing this can read is the `public_events` view, which exposes four
  * columns of events an editor has explicitly ticked as public.

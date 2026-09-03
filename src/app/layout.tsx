@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     default: `${ACADEMY.name}`,
     template: `%s · ${ACADEMY.name}`,
   },
-  description: `${ACADEMY.name} — team platform for players, ExCo and coaching staff.`,
+  description: `${ACADEMY.name}. Team platform for players, ExCo and coaching staff.`,
   robots: { index: false, follow: false },
 };
 

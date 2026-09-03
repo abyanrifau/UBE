@@ -132,7 +132,7 @@ export function FinanceLedger({
           title="No entries"
           description={
             canManage
-              ? 'Add income and expenses as they happen — the monthly and yearly statements build themselves.'
+              ? 'Add income and expenses as they happen. The monthly and yearly statements build themselves.'
               : 'The treasurer has not logged anything for this selection.'
           }
         />
@@ -166,7 +166,7 @@ export function FinanceLedger({
                         {entry.category}
                       </span>
                     </td>
-                    <td className="px-3.5 py-3 text-muted">{entry.description || '—'}</td>
+                    <td className="px-3.5 py-3 text-muted">{entry.description || '–'}</td>
                     <td className="whitespace-nowrap px-3.5 py-3 text-right font-semibold tabular-nums">
                       {entry.kind === 'income' ? '+' : '−'}
                       {money(entry.amount)}
@@ -281,7 +281,7 @@ function EntryForm({
           required
           list="finance-categories"
           defaultValue={entry?.category ?? 'General'}
-          hint="Pick a suggestion or type your own — categories roll up in the yearly breakdown."
+          hint="Pick a suggestion or type your own. Categories roll up in the yearly breakdown."
         />
         <datalist id="finance-categories">
           {SUGGESTED_CATEGORIES.map((c) => (

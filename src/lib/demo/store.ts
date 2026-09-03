@@ -14,6 +14,7 @@ import {
   canManageRoster,
   canPostAnnouncements,
   canViewFinance,
+  isOwner,
   isStaff,
 } from '@/lib/roles';
 import {
@@ -31,7 +32,7 @@ import {
  * In-memory stand-in for the Postgres database, used only in demo mode.
  *
  * It mirrors the RLS policies from supabase/migrations/0001_init.sql rather
- * than serving every row to everyone — otherwise the demo would misrepresent
+ * than serving every row to everyone. Otherwise the demo would misrepresent
  * the thing the app is most careful about. Writes live in the Node process:
  * they survive navigation, and are lost on restart.
  */
@@ -165,7 +166,7 @@ function publicEvents() {
 }
 
 /* ------------------------------------------------------------------ */
-/* Read policy — mirrors the RLS SELECT policies                       */
+/* Read policy: mirrors the RLS SELECT policies                      */
 /* ------------------------------------------------------------------ */
 
 export function readTable(table: string, ctx: DemoContext): Record<string, unknown>[] {
@@ -230,7 +231,7 @@ export function readTable(table: string, ctx: DemoContext): Record<string, unkno
 }
 
 /* ------------------------------------------------------------------ */
-/* Write policy — mirrors the RLS INSERT/UPDATE/DELETE policies        */
+/* Write policy: mirrors the RLS INSERT/UPDATE/DELETE policies       */
 /* ------------------------------------------------------------------ */
 
 /** Returns null when allowed, or a Postgres-shaped error when not. */
@@ -259,7 +260,7 @@ export function checkWrite(
     case 'event_rsvps':
       return row && row.profile_id !== ctx.userId ? denied : null;
     case 'profiles':
-      return row && row.id !== ctx.userId && role !== 'admin' ? denied : null;
+      return row && row.id !== ctx.userId && !isOwner(role) ? denied : null;
     default:
       return denied;
   }

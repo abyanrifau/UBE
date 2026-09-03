@@ -8,7 +8,7 @@ node_modules/
 out/
 build/
 
-# production env — never commit these
+# production env, never commit these
 .env
 .env.local
 .env*.local

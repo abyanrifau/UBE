@@ -2,7 +2,7 @@ import { IS_DEMO } from '@/lib/demo/config';
 
 /**
  * Always visible while demo mode is on, so nobody mistakes the seeded academy
- * for real data — or leaves the flag set on a live deployment.
+ * for real data, or leaves the flag set on a live deployment.
  */
 export function DemoBanner() {
   if (!IS_DEMO) return null;

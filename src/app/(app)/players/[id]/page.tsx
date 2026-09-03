@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound, redirect } from 'next/navigation';
 import { createClient, requireSession } from '@/lib/supabase/server';
-import { canManageRoster, canViewRoster, isAdmin } from '@/lib/roles';
+import { canManageRoster, canViewRoster, isOwner } from '@/lib/roles';
 import type { AttendanceStats, Player, Profile } from '@/lib/types';
 import { BackLink, PageHeader } from '@/components/ui';
 import { PlayerDetail, type AttendanceHistoryRow, type StatHistoryRow } from '@/components/player-detail';
@@ -31,12 +31,12 @@ export default async function PlayerPage({ params }: { params: { id: string } })
       .select('*')
       .eq('player_id', player.id)
       .maybeSingle(),
-    isAdmin(profile.role)
+    isOwner(profile.role)
       ? supabase.from('profiles').select('id,full_name,email,role').eq('is_active', true)
       : Promise.resolve({ data: null }),
   ]);
 
-  const { data: linkedRows } = isAdmin(profile.role)
+  const { data: linkedRows } = isOwner(profile.role)
     ? await supabase.from('players').select('profile_id').not('profile_id', 'is', null)
     : { data: null };
 
@@ -66,7 +66,7 @@ export default async function PlayerPage({ params }: { params: { id: string } })
           <PlayerAdmin
             player={player}
             accounts={accounts}
-            canDelete={isAdmin(profile.role)}
+            canDelete={isOwner(profile.role)}
           />
         </div>
       )}

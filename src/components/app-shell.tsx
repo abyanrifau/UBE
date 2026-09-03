@@ -126,7 +126,7 @@ export function AppShell({
         </main>
 
         {/* -------------------------------------------------------- */}
-        {/* Mobile tab bar — thumb-reachable, always labelled          */}
+        {/* Mobile tab bar: thumb-reachable, always labelled         */}
         {/* -------------------------------------------------------- */}
         <nav
           aria-label="Main"

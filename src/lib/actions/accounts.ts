@@ -4,28 +4,32 @@ import { revalidatePath } from 'next/cache';
 import { randomInt } from 'node:crypto';
 import { getSession } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { ALL_ROLES } from '@/lib/roles';
+import { ALL_ROLES, isOwner } from '@/lib/roles';
 import type { AppRole } from '@/lib/types';
 import { done, fail, friendlyError, optionalStr, str, type ActionResult } from './common';
 
 /**
  * Every function here runs with the service-role key, which bypasses RLS.
- * `assertAdmin` is therefore the only thing standing between a caller and
- * the whole database — it re-checks the role server-side on every call,
- * using the RLS-scoped client, and never trusts anything from the form.
+ * `assertOwner` is therefore the only thing standing between a caller and
+ * the whole database. It re-checks the role server-side on every call, using
+ * the RLS-scoped client, and never trusts anything from the form.
+ *
+ * Owners are the Admin and the Coach, who owns the academy.
  */
 type Guard =
   | { ok: false; error: string }
   | { ok: true; session: NonNullable<Awaited<ReturnType<typeof getSession>>> };
 
-async function assertAdmin(): Promise<Guard> {
+async function assertOwner(): Promise<Guard> {
   const session = await getSession();
   if (!session) return { ok: false, error: 'You are signed out.' };
-  if (session.profile.role !== 'admin') return { ok: false, error: 'Admins only.' };
+  if (!isOwner(session.profile.role)) {
+    return { ok: false, error: 'Only the Coach or an Admin can manage accounts.' };
+  }
   return { ok: true, session };
 }
 
-/** Readable temporary password — easy to type once, then replaced on first login. */
+/** Readable temporary password, easy to type once and replaced on first login. */
 function generateTempPassword(): string {
   const words = [
     'court', 'serve', 'spike', 'block', 'rally', 'setter', 'libero', 'ace',
@@ -41,7 +45,7 @@ type CreateResult =
   | { ok: false; error: string };
 
 export async function createAccount(formData: FormData): Promise<CreateResult> {
-  const guard = await assertAdmin();
+  const guard = await assertOwner();
   if (!guard.ok) return { ok: false, error: guard.error };
 
   const email = str(formData, 'email').toLowerCase();
@@ -90,7 +94,7 @@ export async function createAccount(formData: FormData): Promise<CreateResult> {
 }
 
 export async function updateAccount(formData: FormData): Promise<ActionResult> {
-  const guard = await assertAdmin();
+  const guard = await assertOwner();
   if (!guard.ok) return fail(guard.error);
 
   const id = str(formData, 'id');
@@ -102,9 +106,11 @@ export async function updateAccount(formData: FormData): Promise<ActionResult> {
   if (!fullName) return fail('Enter a name.');
   if (!ALL_ROLES.includes(role)) return fail('Pick a role.');
 
-  // An admin must not be able to lock themselves out of account management.
-  if (id === guard.session.userId && (role !== 'admin' || !isActive)) {
-    return fail('You cannot remove your own admin access. Ask another admin to do it.');
+  // Nobody may lock themselves out of account management.
+  if (id === guard.session.userId && (!isOwner(role) || !isActive)) {
+    return fail(
+      'You cannot remove your own access. Ask the other Coach or Admin to do it.',
+    );
   }
 
   const admin = createAdminClient();
@@ -126,7 +132,7 @@ type ResetResult = { ok: true; password: string } | { ok: false; error: string }
 
 /** Issues a fresh temporary password and forces the setup screen again. */
 export async function resetAccountPassword(userId: string): Promise<ResetResult> {
-  const guard = await assertAdmin();
+  const guard = await assertOwner();
   if (!guard.ok) return { ok: false, error: guard.error };
 
   const password = generateTempPassword();
@@ -143,7 +149,7 @@ export async function resetAccountPassword(userId: string): Promise<ResetResult>
 }
 
 export async function deleteAccount(userId: string): Promise<ActionResult> {
-  const guard = await assertAdmin();
+  const guard = await assertOwner();
   if (!guard.ok) return fail(guard.error);
   if (userId === guard.session.userId) return fail('You cannot delete your own account.');
 

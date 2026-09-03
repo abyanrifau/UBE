@@ -1,14 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { Notice } from '@/components/ui';
 import { IS_DEMO } from '@/lib/demo/config';
 import { DemoAccountPicker } from './demo-accounts';
 
 export function LoginForm() {
-  const router = useRouter();
   const params = useSearchParams();
   const next = params.get('next');
 
@@ -39,7 +38,7 @@ export function LoginForm() {
       return;
     }
 
-    // A deactivated account can still hold valid credentials — check the
+    // A deactivated account can still hold valid credentials, so check the
     // profile before letting them through, and sign them straight back out.
     const { data: profile } = await supabase
       .from('profiles')
@@ -49,13 +48,15 @@ export function LoginForm() {
 
     if (profile && profile.is_active === false) {
       await supabase.auth.signOut();
-      setError('This account has been deactivated. Speak to an admin.');
+      setError('This account has been deactivated. Speak to the coach or an admin.');
       setBusy(false);
       return;
     }
 
-    router.refresh();
-    router.replace(profile?.must_set_password ? '/set-password' : (next ?? '/dashboard'));
+    // A full page load, not router.replace(): Next's client Router Cache
+    // still holds pages rendered for whoever was signed in before, so a soft
+    // navigation here would show the previous member's dashboard.
+    window.location.assign(profile?.must_set_password ? '/set-password' : (next ?? '/dashboard'));
   }
 
   return (

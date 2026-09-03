@@ -28,7 +28,7 @@ export default function Error({
         </h1>
         <p className="mt-2.5 max-w-md text-[14px] leading-relaxed text-muted">
           {missingConfig
-            ? 'The Supabase environment variables are missing. Copy .env.example to .env.local and fill them in — the README walks through it.'
+            ? 'The Supabase environment variables are missing. Copy .env.example to .env.local and fill them in. The README walks through it.'
             : 'Try again. If it keeps happening, let an admin know what you were doing.'}
         </p>
         <div className="mt-7 flex flex-wrap items-center justify-center gap-3">

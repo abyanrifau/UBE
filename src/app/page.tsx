@@ -8,8 +8,8 @@ import { PublicEvents } from '@/components/public-events';
 import { DemoBanner } from '@/components/demo-banner';
 
 export const metadata: Metadata = {
-  title: `${ACADEMY.name} — Volleyball Academy`,
-  description: ACADEMY.tagline,
+  title: `${ACADEMY.name}, volleyball in ${ACADEMY.location}`,
+  description: `${ACADEMY.expansion}. ${ACADEMY.tagline}`,
   robots: { index: true, follow: true },
 };
 
@@ -27,7 +27,7 @@ export default async function HomePage() {
             <Link href="/" className="flex items-center gap-3">
               <Logo size={34} />
               <span className="text-[15px] font-bold uppercase tracking-[0.2em]">
-                {ACADEMY.name.replace(/ Academy$/i, '')}
+                UBE
                 <span className="ml-2 hidden font-medium tracking-[0.16em] text-muted sm:inline">
                   Academy
                 </span>
@@ -50,34 +50,31 @@ export default async function HomePage() {
             <div className="mx-auto max-w-6xl px-5 py-20 sm:px-8 sm:py-28">
               <div className="grid items-center gap-12 lg:grid-cols-[1.15fr_0.85fr]">
                 <div className="animate-fade-up">
-                  <p className="eyebrow">Volleyball Academy</p>
+                  <p className="eyebrow">Volleyball Academy · {ACADEMY.location}</p>
                   <h1 className="mt-5 text-[clamp(2.6rem,8vw,5.25rem)] font-black uppercase leading-[0.92] tracking-[-0.03em]">
-                    {ACADEMY.name.split(' ').map((word, i) => (
-                      <span key={i} className="block">
-                        {word}
-                      </span>
-                    ))}
+                    <span className="block">UBE</span>
+                    <span className="block">Academy</span>
                   </h1>
                   <p className="mt-7 max-w-md text-[17px] leading-relaxed text-muted">
                     {ACADEMY.tagline}
                   </p>
                   <div className="mt-9 flex flex-wrap items-center gap-3">
-                    <Link href="/login" className="btn-primary">
-                      Member log in
-                    </Link>
                     <a
-                      href={ACADEMY.instagram}
+                      href={ACADEMY.joinFormUrl}
                       target="_blank"
                       rel="noreferrer noopener"
-                      className="btn-secondary"
+                      className="btn-primary"
                     >
-                      @{ACADEMY.instagramHandle}
+                      Apply to join
                     </a>
+                    <Link href="/login" className="btn-secondary">
+                      Member log in
+                    </Link>
                   </div>
                 </div>
 
                 <div className="hidden justify-self-center lg:block">
-                  <Logo size={300} className="opacity-[0.96]" />
+                  <Logo size={300} />
                 </div>
               </div>
             </div>
@@ -101,7 +98,7 @@ export default async function HomePage() {
                   rel="noreferrer noopener"
                   className="text-sm text-muted underline-offset-4 transition-colors hover:text-ink hover:underline"
                 >
-                  Follow @{ACADEMY.instagramHandle} →
+                  Follow @{ACADEMY.instagramHandle}
                 </a>
               </div>
 
@@ -139,46 +136,45 @@ export default async function HomePage() {
           </section>
 
           {/* ---------------------------------------------------------- */}
-          {/* About + upcoming public events                              */}
+          {/* About and contact                                           */}
           {/* ---------------------------------------------------------- */}
           <section className="border-b border-line">
-            <div className="mx-auto grid max-w-6xl gap-px bg-line px-0 sm:px-0 lg:grid-cols-2">
+            <div className="mx-auto grid max-w-6xl gap-px bg-line lg:grid-cols-2">
               <div className="bg-paper px-5 py-14 sm:px-8 sm:py-16">
                 <p className="eyebrow">About</p>
-                <h2 className="mt-2 text-2xl font-bold tracking-tight">
-                  What {ACADEMY.name} is
-                </h2>
+                <h2 className="mt-2 text-2xl font-bold tracking-tight">The {ACADEMY.expansion}</h2>
                 <div className="mt-5 space-y-4 text-[15px] leading-relaxed text-muted">
                   <p>
-                    {ACADEMY.name} is a volleyball academy built around consistent training,
-                    competitive play and a squad that actually knows what is happening week to
-                    week.
+                    UBE Academy is a volleyball academy in {ACADEMY.location}, with a
+                    men&rsquo;s team and a women&rsquo;s team. Most of our players are between 17
+                    and 21, and training is held mainly in Hulhumal&eacute;.
                   </p>
                   <p>
-                    Training sessions, matches and tournaments are coordinated through this
-                    platform. Players, the executive committee and coaching staff each get their
-                    own view of the schedule, the roster and the announcements that matter to
-                    them.
+                    We compete, and we also take players who are newer to the game. There is one
+                    squad rather than an A team and a B team: everyone trains together, and the
+                    lineup for each tournament is picked from the whole group. Starting out does
+                    not mean training on your own in a corner.
                   </p>
                   <p>
-                    Interested in joining, or want to arrange a friendly? Reach out — we answer
-                    fastest on Instagram.
+                    What we ask for is turning up. Consistent attendance is what turns a group of
+                    people who play volleyball into a team.
                   </p>
                 </div>
+
+                <a
+                  href={ACADEMY.joinFormUrl}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="btn-primary mt-8"
+                >
+                  Apply to join
+                </a>
               </div>
 
               <div className="bg-paper px-5 py-14 sm:px-8 sm:py-16">
                 <p className="eyebrow">Contact</p>
                 <h2 className="mt-2 text-2xl font-bold tracking-tight">Get in touch</h2>
                 <dl className="mt-6 divide-line border-t border-line">
-                  <ContactRow label="Email">
-                    <a
-                      href={`mailto:${ACADEMY.email}`}
-                      className="underline-offset-4 hover:underline"
-                    >
-                      {ACADEMY.email}
-                    </a>
-                  </ContactRow>
                   <ContactRow label="Instagram">
                     <a
                       href={ACADEMY.instagram}
@@ -189,15 +185,28 @@ export default async function HomePage() {
                       @{ACADEMY.instagramHandle}
                     </a>
                   </ContactRow>
-                  {ACADEMY.location && (
-                    <ContactRow label="Based in">{ACADEMY.location}</ContactRow>
-                  )}
+                  <ContactRow label="Join the academy">
+                    <a
+                      href={ACADEMY.joinFormUrl}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      className="underline-offset-4 hover:underline"
+                    >
+                      Application form
+                    </a>
+                  </ContactRow>
+                  <ContactRow label="Training">{ACADEMY.location}</ContactRow>
                   <ContactRow label="Members">
                     <Link href="/login" className="underline-offset-4 hover:underline">
-                      Log in to the platform →
+                      Log in to the platform
                     </Link>
                   </ContactRow>
                 </dl>
+
+                <p className="mt-5 text-[13px] leading-relaxed text-muted">
+                  Instagram is the fastest way to reach us. Questions about trials, fixtures or
+                  playing a friendly are all welcome there.
+                </p>
 
                 <div className="mt-10">
                   <p className="eyebrow">Coming up</p>
@@ -211,11 +220,24 @@ export default async function HomePage() {
         <footer className="border-t border-line">
           <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-5 py-8 text-xs text-muted sm:flex-row sm:px-8">
             <span>
-              © {new Date().getFullYear()} {ACADEMY.name}
+              © {new Date().getFullYear()} {ACADEMY.name}, {ACADEMY.location}
             </span>
             <div className="flex items-center gap-5">
-              <a href={ACADEMY.instagram} target="_blank" rel="noreferrer noopener" className="hover:text-ink">
+              <a
+                href={ACADEMY.instagram}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="hover:text-ink"
+              >
                 Instagram
+              </a>
+              <a
+                href={ACADEMY.joinFormUrl}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="hover:text-ink"
+              >
+                Apply to join
               </a>
               <Link href="/login" className="hover:text-ink">
                 Member log in
@@ -242,10 +264,7 @@ function InstagramFallback() {
     <div className="border border-line">
       <div className="grid grid-cols-2 gap-px bg-line sm:grid-cols-3" aria-hidden>
         {Array.from({ length: 6 }).map((_, i) => (
-          <div
-            key={i}
-            className="flex aspect-square items-center justify-center bg-subtle"
-          >
+          <div key={i} className="flex aspect-square items-center justify-center bg-subtle">
             <Logo size={44} className="opacity-15" />
           </div>
         ))}

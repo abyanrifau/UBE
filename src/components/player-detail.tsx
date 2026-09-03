@@ -155,15 +155,15 @@ export function PlayerDetail({
         <SectionTitle>Details</SectionTitle>
         <div className="card px-5 py-2">
           <dl className="divide-line">
-            <KeyValue label="Jersey" value={player.jersey_number ?? '—'} />
-            <KeyValue label="Position" value={player.position ?? '—'} />
+            <KeyValue label="Jersey" value={player.jersey_number ?? '–'} />
+            <KeyValue label="Position" value={player.position ?? '–'} />
             <KeyValue
               label="Height"
-              value={player.height_cm ? `${player.height_cm} cm` : '—'}
+              value={player.height_cm ? `${player.height_cm} cm` : '–'}
             />
             <KeyValue
               label="Weight"
-              value={player.weight_kg ? `${player.weight_kg} kg` : '—'}
+              value={player.weight_kg ? `${player.weight_kg} kg` : '–'}
             />
             <KeyValue
               label="Date of birth"
@@ -172,15 +172,15 @@ export function PlayerDetail({
                   ? `${formatDate(player.date_of_birth)}${
                       age(player.date_of_birth) !== null ? ` · ${age(player.date_of_birth)}` : ''
                     }`
-                  : '—'
+                  : '–'
               }
             />
             {showContact && (
               <>
-                <KeyValue label="Email" value={player.email ?? '—'} />
-                <KeyValue label="Phone" value={player.phone ?? '—'} />
-                <KeyValue label="Guardian" value={player.guardian_name ?? '—'} />
-                <KeyValue label="Guardian phone" value={player.guardian_phone ?? '—'} />
+                <KeyValue label="Email" value={player.email ?? '–'} />
+                <KeyValue label="Phone" value={player.phone ?? '–'} />
+                <KeyValue label="Guardian" value={player.guardian_name ?? '–'} />
+                <KeyValue label="Guardian phone" value={player.guardian_phone ?? '–'} />
               </>
             )}
             <KeyValue

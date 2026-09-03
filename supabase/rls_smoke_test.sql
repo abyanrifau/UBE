@@ -1,5 +1,5 @@
 -- =====================================================================
--- RLS smoke test — proves the access rules hold at the database level.
+-- RLS smoke test: proves the access rules hold at the database level.
 --
 -- This impersonates each role the way PostgREST does (SET ROLE authenticated
 -- plus a JWT claim) and reports how many rows each one can actually read.
@@ -11,7 +11,7 @@
 --   2. Add a couple of finance entries as the Treasurer, and a player or two.
 --   3. Paste this whole file into the Supabase SQL editor and run it.
 --
--- WHAT TO EXPECT — the last SELECT prints PASS or FAIL per rule.
+-- WHAT TO EXPECT: the last SELECT prints PASS or FAIL per rule.
 -- =====================================================================
 
 begin;
@@ -83,18 +83,10 @@ select check_name, expected, actual,
        case when passed then 'PASS' else 'FAIL' end as result
 from (
   select
-    'Coach cannot read finance_entries'            as check_name,
+    'Player cannot read finance_entries'           as check_name,
     '0'                                            as expected,
-    coalesce(max(finance_entries) filter (where role_name = 'coach'), 0)::text  as actual,
-    coalesce(max(finance_entries) filter (where role_name = 'coach'), 0) = 0    as passed
-  from probe_results
-
-  union all
-  select
-    'Player cannot read finance_entries',
-    '0',
-    coalesce(max(finance_entries) filter (where role_name = 'player'), 0)::text,
-    coalesce(max(finance_entries) filter (where role_name = 'player'), 0) = 0
+    coalesce(max(finance_entries) filter (where role_name = 'player'), 0)::text as actual,
+    coalesce(max(finance_entries) filter (where role_name = 'player'), 0) = 0   as passed
   from probe_results
 
   union all
@@ -107,10 +99,11 @@ from (
 
   union all
   select
-    'Coach cannot read the monthly summary view',
-    '0',
-    coalesce(max(finance_monthly) filter (where role_name = 'coach'), 0)::text,
-    coalesce(max(finance_monthly) filter (where role_name = 'coach'), 0) = 0
+    'Coach (academy owner) can read finance_entries',
+    'all ' || (select n from total_finance)::text,
+    coalesce(max(finance_entries) filter (where role_name = 'coach'), 0)::text,
+    coalesce(max(finance_entries) filter (where role_name = 'coach'), 0)
+      = (select n from total_finance)
   from probe_results
 
   union all

@@ -11,8 +11,8 @@ Two files, both with transparent backgrounds:
 
 `src/components/logo.tsx` renders both and swaps them with CSS on the `.dark`
 class (`dark:hidden` / `hidden dark:block`). The correct mark is painted on the
-first frame, so there is no flash of the wrong one and no JavaScript involved —
-the component works in a Server Component.
+first frame, so there is no flash of the wrong one and no JavaScript involved.
+That also means it works inside a Server Component.
 
 The crest is taller than it is wide (roughly 4:5), so the `size` prop sets the
 **height** and the width follows the natural ratio.

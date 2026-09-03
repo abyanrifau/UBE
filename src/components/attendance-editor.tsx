@@ -98,7 +98,7 @@ export function AttendanceEditor({
           >
             <span className="flex min-w-0 items-center gap-3">
               <span className="w-7 shrink-0 text-right text-[12px] font-bold tabular-nums text-muted">
-                {row.jersey ?? '—'}
+                {row.jersey ?? '–'}
               </span>
               <span className="truncate text-[14px] font-medium">{row.name}</span>
             </span>

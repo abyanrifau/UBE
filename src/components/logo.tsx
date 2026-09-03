@@ -3,7 +3,7 @@
  *
  * Two transparent PNGs live in `public/brand`: black artwork for light mode,
  * white artwork for dark mode. Both are rendered and swapped with CSS on the
- * `.dark` class, so the right one is already painted on the first frame — no
+ * `.dark` class, so the right one is already painted on the first frame, with no
  * JavaScript, no flash of the wrong mark, and it works in a Server Component.
  *
  * The artwork is taller than it is wide, so `size` sets the height and the

@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 /* ------------------------------------------------------------------ */
-/* Palette — greyscale only. Interest comes from contrast and spacing. */
+/* Palette: greyscale only. Interest comes from contrast and spacing. */
 /* ------------------------------------------------------------------ */
 @layer base {
   :root {

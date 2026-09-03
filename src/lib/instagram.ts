@@ -22,7 +22,7 @@ type GraphMedia = {
 /**
  * Pulls recent posts from the Instagram Graph API.
  *
- * Requires INSTAGRAM_ACCESS_TOKEN — a long-lived token from an Instagram
+ * Requires INSTAGRAM_ACCESS_TOKEN, a long-lived token from an Instagram
  * account connected through "Instagram API with Instagram Login" (the
  * successor to the retired Basic Display API). Long-lived tokens last 60
  * days and must be refreshed; see docs/INSTAGRAM.md.

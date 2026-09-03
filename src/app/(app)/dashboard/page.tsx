@@ -69,7 +69,7 @@ export default async function DashboardPage() {
 
       <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_320px]">
         {/* ---------------------------------------------------------- */}
-        {/* Announcements — the reason this page exists                 */}
+        {/* Announcements: the reason this page exists                */}
         {/* ---------------------------------------------------------- */}
         <section>
           <SectionTitle>Announcements</SectionTitle>
@@ -136,7 +136,7 @@ function greeting() {
 }
 
 /** Small role-aware summary strip. Finance numbers are fetched only for
- *  roles allowed to see them — and RLS would return nothing regardless. */
+ *  roles allowed to see them, and RLS would return nothing regardless. */
 async function QuickStats({ role }: { role: AppRole }) {
   const supabase = createClient();
   const now = new Date();
