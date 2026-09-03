@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { Notice } from '@/components/ui';
+import { IS_DEMO } from '@/lib/demo/config';
+import { DemoAccountPicker } from './demo-accounts';
 
 export function LoginForm() {
   const router = useRouter();
@@ -59,6 +61,16 @@ export function LoginForm() {
   return (
     <form onSubmit={onSubmit} className="space-y-5" noValidate>
       {error && <Notice tone="error">{error}</Notice>}
+
+      {IS_DEMO && (
+        <DemoAccountPicker
+          onPick={(demoEmail, demoPassword) => {
+            setEmail(demoEmail);
+            setPassword(demoPassword);
+            setError(null);
+          }}
+        />
+      )}
 
       <div>
         <label className="label" htmlFor="email">

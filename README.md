@@ -26,6 +26,30 @@ Full permission matrix: [`docs/PERMISSIONS.md`](docs/PERMISSIONS.md).
 
 ---
 
+## Try it without a database
+
+Before wiring up Supabase, you can walk the entire app with seeded sample data:
+
+```bash
+npm install
+echo "NEXT_PUBLIC_DEMO_MODE=true" >> .env.local
+npm run dev
+```
+
+Sign in at <http://localhost:3000/login> — the screen lists five accounts, one
+per role. Password is `ubedemo` for all of them; `admin@ube.academy` gets you
+everything.
+
+Sign in as `player@ube.academy` to watch the restrictions work: Financials and
+the roster are simply not reachable. Full details in
+[`docs/DEMO.md`](docs/DEMO.md).
+
+> Demo mode is an authentication bypass, off unless the flag is set, with a
+> banner pinned to every screen while it is on. Never enable it on a
+> deployment holding real member data.
+
+---
+
 ## Setup
 
 ### 1. Install
@@ -80,12 +104,10 @@ npm run dev
 Sign in at <http://localhost:3000/login>. You will be asked to choose a real
 password, then you can create everyone else from **Accounts**.
 
-### 6. Add the crest
+### 6. Turn demo mode off
 
-Save the academy logo — black artwork on a white background, exactly as
-supplied — to `public/brand/ube-logo.png`. No editing needed: the background
-is keyed out and the mark inverted to white for dark mode entirely in CSS.
-Details in [`public/brand/README.md`](public/brand/README.md).
+If you switched it on, set `NEXT_PUBLIC_DEMO_MODE=false` (or delete the line)
+so the app talks to Supabase instead of the sample data.
 
 ### 7. Instagram (optional)
 
@@ -152,7 +174,7 @@ the monthly summary view"*.
 ```
 UBE/
 ├── public/
-│   └── brand/            logo and brand assets (drop ube-logo.png here)
+│   └── brand/            crest, black + white, one per theme
 ├── src/
 │   ├── app/              routes — App Router
 │   │   ├── page.tsx          public homepage
@@ -164,6 +186,7 @@ UBE/
 │   ├── components/       UI — shell, forms, charts, calendar, editors
 │   ├── lib/
 │   │   ├── actions/          server actions (all writes)
+│   │   ├── demo/             sample-data backend for demo mode
 │   │   ├── supabase/         browser / server / admin / public clients
 │   │   ├── queries/          shared reads
 │   │   ├── roles.ts          the permission matrix, mirrored from RLS
@@ -184,6 +207,10 @@ all require them there.
 ---
 
 ## Design
+
+The crest ships as two transparent PNGs — black artwork for light mode, white
+for dark — swapped with CSS on the `.dark` class, so the right one is painted
+on the first frame with no flash.
 
 Greyscale only — no accent colours anywhere. Hierarchy comes from contrast,
 weight, spacing and hairline rules. Inter throughout, tabular figures for every
@@ -221,3 +248,5 @@ they invert with the theme and pull in no charting library.
 - `profiles` has a trigger blocking non-admins from changing their own role,
   active flag or email, even though they may edit their name and phone.
 - An admin cannot demote or deactivate themselves — that needs another admin.
+- `NEXT_PUBLIC_DEMO_MODE` bypasses authentication entirely. It is off by
+  default and shows a banner while on; never set it in production.

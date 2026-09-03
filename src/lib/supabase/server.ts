@@ -2,13 +2,24 @@ import { cookies } from 'next/headers';
 import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { redirect } from 'next/navigation';
 import type { Profile } from '@/lib/types';
+import { IS_DEMO, DEMO_COOKIE } from '@/lib/demo/config';
+import { createDemoClient } from '@/lib/demo/client';
+
+type AppSupabaseClient = ReturnType<typeof createServerClient>;
 
 /**
  * Server client bound to the request cookies. Every query made through it
  * runs as the signed-in user, so RLS applies exactly as it does in the browser.
  */
-export function createClient() {
+export function createClient(): AppSupabaseClient {
   const cookieStore = cookies();
+
+  // Demo mode swaps the whole database for an in-memory fake. See
+  // src/lib/demo/config.ts — this is an auth bypass and is off by default.
+  if (IS_DEMO) {
+    const demoUserId = cookieStore.get(DEMO_COOKIE)?.value ?? null;
+    return createDemoClient(demoUserId) as unknown as AppSupabaseClient;
+  }
 
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

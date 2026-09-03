@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import { Logo } from '@/components/logo';
 import { ThemeProvider, ThemeToggle } from '@/components/theme';
 import { ACADEMY } from '@/lib/config';
+import { DemoBanner } from '@/components/demo-banner';
 
 /** Shared frame for the login and password-setup screens. */
 export function AuthShell({
@@ -21,6 +22,7 @@ export function AuthShell({
   return (
     <ThemeProvider>
       <div className="flex min-h-dvh flex-col">
+        <DemoBanner />
         <header className="flex h-16 items-center justify-between px-5 sm:px-8">
           <Link href="/" className="flex items-center gap-2.5">
             <Logo size={30} />

@@ -5,6 +5,7 @@ import { getInstagramPosts } from '@/lib/instagram';
 import { Logo } from '@/components/logo';
 import { ThemeProvider, ThemeToggle } from '@/components/theme';
 import { PublicEvents } from '@/components/public-events';
+import { DemoBanner } from '@/components/demo-banner';
 
 export const metadata: Metadata = {
   title: `${ACADEMY.name} — Volleyball Academy`,
@@ -20,6 +21,7 @@ export default async function HomePage() {
   return (
     <ThemeProvider>
       <div className="flex min-h-dvh flex-col">
+        <DemoBanner />
         <header className="sticky top-0 z-40 border-b border-line bg-paper/85 backdrop-blur">
           <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:px-8">
             <Link href="/" className="flex items-center gap-3">

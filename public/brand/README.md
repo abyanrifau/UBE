@@ -2,35 +2,29 @@
 
 ## The crest
 
-Save the academy crest here as:
+Two files, both with transparent backgrounds:
 
-```
-public/brand/ube-logo.png
-```
+| File                  | Artwork | Used in    |
+| --------------------- | ------- | ---------- |
+| `ube-logo-black.png`  | Black   | Light mode |
+| `ube-logo-white.png`  | White   | Dark mode  |
 
-Requirements — deliberately minimal, because the app does the rest:
+`src/components/logo.tsx` renders both and swaps them with CSS on the `.dark`
+class (`dark:hidden` / `hidden dark:block`). The correct mark is painted on the
+first frame, so there is no flash of the wrong one and no JavaScript involved —
+the component works in a Server Component.
 
-- **Black artwork on a plain white background.** The file you already have is
-  exactly right. Do **not** pre-remove the background and do **not** make a
-  separate white version for dark mode.
-- Square-ish, and at least 512×512 so it stays crisp on retina screens.
+The crest is taller than it is wide (roughly 4:5), so the `size` prop sets the
+**height** and the width follows the natural ratio.
 
-### Why no editing is needed
+### Replacing them
 
-`.brand-mark` in `src/app/globals.css` handles both jobs with CSS blend modes:
-
-| Theme | CSS applied                          | Result                                        |
-| ----- | ------------------------------------ | --------------------------------------------- |
-| Light | `mix-blend-mode: multiply`           | White background drops out, artwork stays black |
-| Dark  | `filter: invert(1)` + `screen`       | Artwork becomes white, background drops out     |
-
-So one file covers both themes, with no transparency, no build step and no
-image-processing dependency.
-
-Until the file exists, `src/components/logo.tsx` renders a vector stand-in
-crest. It is probed once per page load, so there is never a broken image.
+Keep the same two filenames and keep the backgrounds transparent. Anything from
+about 440px tall upward stays crisp on retina screens. Nothing else needs
+changing.
 
 ## Anything else
 
-Other brand files (kit mock-ups, sponsor logos, favicons) can live in this
-folder too. The app icon is generated from `src/app/icon.svg`.
+Other brand files (kit mock-ups, sponsor logos, press shots) can live in this
+folder too. The browser-tab icon is generated separately from
+`src/app/icon.svg`.

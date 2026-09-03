@@ -1,4 +1,9 @@
-import { createClient as createSupabaseClient } from '@supabase/supabase-js';
+import { createClient as createSupabaseClient, type SupabaseClient } from '@supabase/supabase-js';
+import { IS_DEMO } from '@/lib/demo/config';
+import { createDemoClient } from '@/lib/demo/client';
+
+// Supabase’s own loose schema typing — the app has no generated Database type.
+type PublicClient = SupabaseClient<any, 'public', any>;
 
 /**
  * Anonymous client with no session attached — used only by the public
@@ -8,7 +13,12 @@ import { createClient as createSupabaseClient } from '@supabase/supabase-js';
  *
  * Deliberately cookie-free so the homepage can stay statically rendered.
  */
-export function createPublicClient() {
+export function createPublicClient(): PublicClient {
+  if (IS_DEMO) {
+    // No session: only the public_events view is readable, same as anon.
+    return createDemoClient(null) as unknown as PublicClient;
+  }
+
   return createSupabaseClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,

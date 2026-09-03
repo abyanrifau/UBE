@@ -6,6 +6,7 @@ import { useCallback } from 'react';
 import { Logo } from '@/components/logo';
 import { ThemeProvider, ThemeToggle } from '@/components/theme';
 import { SignOutButton } from '@/components/sign-out';
+import { DemoBanner } from '@/components/demo-banner';
 import { createClient } from '@/lib/supabase/client';
 import { ROLE_LABEL } from '@/lib/roles';
 import { initials } from '@/lib/format';
@@ -63,6 +64,8 @@ export function AppShell({
   return (
     <ThemeProvider initial={theme} onPersist={persistTheme}>
       <div className="flex min-h-dvh flex-col">
+        <DemoBanner />
+
         {/* -------------------------------------------------------- */}
         {/* Header                                                    */}
         {/* -------------------------------------------------------- */}

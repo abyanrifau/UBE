@@ -73,17 +73,6 @@
 /* Components                                                          */
 /* ------------------------------------------------------------------ */
 @layer components {
-  /* The academy mark ships as black artwork on a white background.
-     Blend modes key the background out and flip the artwork for dark
-     mode, so no pre-processed transparent asset is needed. */
-  .brand-mark {
-    mix-blend-mode: multiply;
-  }
-  .dark .brand-mark {
-    mix-blend-mode: screen;
-    filter: invert(1);
-  }
-
   .field {
     @apply w-full rounded-none border border-line bg-paper px-3 py-2.5 text-[15px]
            text-ink placeholder:text-muted transition-colors
