@@ -119,28 +119,3 @@ function CrestMark({ size, className }: { size: number; className: string }) {
     </svg>
   );
 }
-
-/** Crest plus wordmark, used in the header and on the login screen. */
-export function Wordmark({
-  size = 32,
-  subtitle,
-  className = '',
-}: {
-  size?: number;
-  subtitle?: string;
-  className?: string;
-}) {
-  return (
-    <span className={`inline-flex items-center gap-2.5 ${className}`}>
-      <Logo size={size} />
-      <span className="flex flex-col leading-none">
-        <span className="text-[15px] font-bold uppercase tracking-[0.18em]">UBE</span>
-        {subtitle !== undefined ? (
-          <span className="mt-1 text-[10px] font-medium uppercase tracking-[0.22em] text-muted">
-            {subtitle}
-          </span>
-        ) : null}
-      </span>
-    </span>
-  );
-}

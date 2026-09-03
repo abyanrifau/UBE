@@ -81,16 +81,3 @@ export async function deletePlayer(id: string): Promise<ActionResult> {
   revalidatePath('/players');
   return done();
 }
-
-/** Coach's freeform notes — the low-friction path when stats are overkill. */
-export async function savePlayerNotes(id: string, notes: string): Promise<ActionResult> {
-  const supabase = createClient();
-  const { error } = await supabase
-    .from('players')
-    .update({ notes: notes.trim() === '' ? null : notes })
-    .eq('id', id);
-
-  if (error) return fail(friendlyError(error));
-  revalidatePath(`/players/${id}`);
-  return done();
-}

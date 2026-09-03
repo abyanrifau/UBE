@@ -55,12 +55,6 @@ export const AccountsIcon = ({ className }: IconProps) => (
   </svg>
 );
 
-export const PlusIcon = ({ className }: IconProps) => (
-  <svg {...svg(className)}>
-    <path d="M12 5v14M5 12h14" />
-  </svg>
-);
-
 export const ChevronRight = ({ className }: IconProps) => (
   <svg {...svg(className)}>
     <path d="m9 5 7 7-7 7" />

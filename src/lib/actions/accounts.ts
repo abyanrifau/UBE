@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { randomInt } from 'node:crypto';
-import { createClient, getSession } from '@/lib/supabase/server';
+import { getSession } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { ALL_ROLES } from '@/lib/roles';
 import type { AppRole } from '@/lib/types';
@@ -151,26 +151,6 @@ export async function deleteAccount(userId: string): Promise<ActionResult> {
   const { error } = await admin.auth.admin.deleteUser(userId);
   if (error) return fail(error.message);
 
-  revalidatePath('/accounts');
-  revalidatePath('/players');
-  return done();
-}
-
-/** Attach or detach a roster row from a login. */
-export async function linkPlayerToAccount(
-  playerId: string,
-  profileId: string | null,
-): Promise<ActionResult> {
-  const guard = await assertAdmin();
-  if (!guard.ok) return fail(guard.error);
-
-  const supabase = createClient();
-  const { error } = await supabase
-    .from('players')
-    .update({ profile_id: profileId })
-    .eq('id', playerId);
-
-  if (error) return fail(friendlyError(error));
   revalidatePath('/accounts');
   revalidatePath('/players');
   return done();

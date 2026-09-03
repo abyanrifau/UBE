@@ -78,8 +78,21 @@ To check by hand, sign in as a player and try:
 - Visiting `/financials` → redirected to the dashboard.
 - Visiting `/players` → redirected to your own profile.
 - Visiting `/players/<someone-else's-id>` → 404.
-- In the browser console:
+- Query Supabase directly, bypassing the app entirely — while signed in as the
+  player, open the browser console on any page of the app and run:
+
   ```js
-  await (await fetch('/rest/v1/finance_entries', { headers: { apikey: '<anon key>' } })).json()
+  // values from .env.local
+  const url  = 'https://YOUR-PROJECT.supabase.co';
+  const anon = '<your anon key>';
+  const jwt  = JSON.parse(
+    localStorage.getItem(Object.keys(localStorage).find((k) => k.endsWith('-auth-token')))
+  ).access_token;
+
+  await fetch(`${url}/rest/v1/finance_entries?select=*`, {
+    headers: { apikey: anon, Authorization: `Bearer ${jwt}` },
+  }).then((r) => r.json());
   ```
-  → empty, because the policy excludes the role, not because the UI hid it.
+
+  → `[]`. Not an error, not a filtered UI — Postgres simply has no rows to
+  return for that role. The same request as the Treasurer returns everything.
