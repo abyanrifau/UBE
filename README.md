@@ -194,6 +194,8 @@ UBE/
 │   │   ├── format.ts         money, dates, time zone handling
 │   │   └── config.ts         academy details from env
 │   └── middleware.ts     session refresh and route guard
+├── scripts/
+│   └── make-icons.mjs    builds the favicons from the crest, no deps
 ├── supabase/
 │   ├── migrations/       0001_init.sql, schema, RLS, views
 │   ├── bootstrap_admin.sql
@@ -211,7 +213,8 @@ all require them there.
 
 The crest ships as two transparent PNGs, black artwork for light mode and
 white for dark, swapped with CSS on the `.dark` class so the right one is
-painted on the first frame with no flash.
+painted on the first frame with no flash. The browser-tab and iOS icons are
+generated from the same artwork by `npm run icons`.
 
 Greyscale only, no accent colours anywhere. Hierarchy comes from contrast,
 weight, spacing and hairline rules. Inter throughout, tabular figures for
@@ -234,6 +237,7 @@ they invert with the theme and pull in no charting library.
 | `npm run start`     | Serve the production build |
 | `npm run typecheck` | `tsc --noEmit`             |
 | `npm run lint`      | Next.js ESLint             |
+| `npm run icons`     | Rebuild favicons from the crest |
 
 ---
 
