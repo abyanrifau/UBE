@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers';
 import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { redirect } from 'next/navigation';
-import type { Profile } from '@/lib/types';
+import type { Profile, Squad } from '@/lib/types';
 import { IS_DEMO, DEMO_COOKIE } from '@/lib/demo/config';
 import { createDemoClient } from '@/lib/demo/client';
 
@@ -39,7 +39,15 @@ export function createClient(): AppSupabaseClient {
   );
 }
 
-export type Session = { profile: Profile; userId: string };
+export type Session = {
+  profile: Profile;
+  userId: string;
+  /**
+   * The squad of this person's own roster row, if they have one. Staff
+   * usually have no roster row, and see both squads regardless.
+   */
+  squad: Squad | null;
+};
 
 /** Returns the signed-in profile, or null. Never throws. */
 export async function getSession(): Promise<Session | null> {
@@ -49,14 +57,15 @@ export async function getSession(): Promise<Session | null> {
   } = await supabase.auth.getUser();
   if (!user) return null;
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('id', user.id)
-    .maybeSingle<Profile>();
+  const [{ data: profile }, { data: player }] = await Promise.all([
+    supabase.from('profiles').select('*').eq('id', user.id).maybeSingle<Profile>(),
+    supabase.from('players').select('squad').eq('profile_id', user.id).maybeSingle<{
+      squad: Squad | null;
+    }>(),
+  ]);
 
   if (!profile || !profile.is_active) return null;
-  return { profile, userId: user.id };
+  return { profile, userId: user.id, squad: player?.squad ?? null };
 }
 
 /**

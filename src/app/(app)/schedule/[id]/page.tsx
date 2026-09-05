@@ -14,6 +14,7 @@ import type {
 import { formatDateLong, formatTime } from '@/lib/format';
 import { BackLink, KeyValue, PageHeader, SectionTitle, Tag } from '@/components/ui';
 import { RsvpControl } from '@/components/events';
+import { SquadTag } from '@/components/squad';
 import { EVENT_TYPE_LABEL } from '@/lib/events';
 import { EventAdmin } from '@/components/event-admin';
 import { AttendanceEditor } from '@/components/attendance-editor';
@@ -60,7 +61,7 @@ export default async function EventPage({ params }: { params: { id: string } }) 
       canEditRoster
         ? supabase
             .from('players')
-            .select('id,full_name,jersey_number')
+            .select('id,full_name,jersey_number,squad')
             .eq('is_active', true)
             .order('jersey_number', { ascending: true, nullsFirst: false })
             .order('full_name')
@@ -88,10 +89,12 @@ export default async function EventPage({ params }: { params: { id: string } }) 
     rsvpGroups[r.status].push(nameById.get(r.profile_id) ?? 'Someone');
   }
 
-  const players = (playersRes.data ?? []) as Pick<
+  // A boys practice registers the boys squad. An academy-wide session, like
+  // the Invitational or a joint conditioning block, registers everyone.
+  const players = ((playersRes.data ?? []) as Pick<
     Player,
-    'id' | 'full_name' | 'jersey_number'
-  >[];
+    'id' | 'full_name' | 'jersey_number' | 'squad'
+  >[]).filter((p) => event.squad === null || p.squad === event.squad);
   const attendanceByPlayer = new Map<string, AttendanceRow>(
     ((attendanceRes.data ?? []) as AttendanceRow[]).map((a) => [a.player_id, a]),
   );
@@ -123,6 +126,7 @@ export default async function EventPage({ params }: { params: { id: string } }) 
           <section>
             <div className="flex flex-wrap gap-1.5">
               <Tag solid>{EVENT_TYPE_LABEL[event.type]}</Tag>
+              <SquadTag squad={event.squad} />
               {event.is_public && <Tag>Public</Tag>}
               {event.visible_to_roles.length < 5 && (
                 <Tag>

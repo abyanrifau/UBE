@@ -1,6 +1,7 @@
 import type { AttendanceStats, MatchStat, Player } from '@/lib/types';
 import { age, formatDate } from '@/lib/format';
 import { KeyValue, Meter, SectionTitle, Stat, Tag } from '@/components/ui';
+import { SQUAD_LABEL } from '@/lib/roles';
 import { EVENT_TYPE_LABEL } from '@/lib/events';
 
 export type AttendanceHistoryRow = {
@@ -155,6 +156,10 @@ export function PlayerDetail({
         <SectionTitle>Details</SectionTitle>
         <div className="card px-5 py-2">
           <dl className="divide-line">
+            <KeyValue
+              label="Team"
+              value={player.squad ? `${SQUAD_LABEL[player.squad]} squad` : 'Not assigned'}
+            />
             <KeyValue label="Jersey" value={player.jersey_number ?? '–'} />
             <KeyValue label="Position" value={player.position ?? '–'} />
             <KeyValue

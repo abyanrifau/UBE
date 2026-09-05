@@ -39,15 +39,24 @@ export default async function PlayersPage() {
     .filter((a) => a.role === 'player' && !linkedProfileIds.has(a.id))
     .map((a) => ({ id: a.id, label: `${a.full_name || a.email} (${a.email})` }));
 
-  const active = rows.filter((r) => r.is_active).length;
+  const active = rows.filter((r) => r.is_active);
+  const boys = active.filter((r) => r.squad === 'boys').length;
+  const girls = active.filter((r) => r.squad === 'girls').length;
+  const unassigned = active.length - boys - girls;
+  const archived = rows.length - active.length;
 
   return (
     <>
       <PageHeader
         title="Players"
-        description={`${active} active on the roster${
-          rows.length - active > 0 ? ` · ${rows.length - active} archived` : ''
-        }.`}
+        description={[
+          `${boys} in the boys squad`,
+          `${girls} in the girls squad`,
+          unassigned > 0 ? `${unassigned} not assigned` : null,
+          archived > 0 ? `${archived} archived` : null,
+        ]
+          .filter(Boolean)
+          .join(' · ')}
       />
       <Roster
         players={rows}

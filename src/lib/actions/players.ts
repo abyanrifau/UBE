@@ -9,6 +9,7 @@ import {
   friendlyError,
   num,
   optionalStr,
+  squadOf,
   str,
   type ActionResult,
 } from './common';
@@ -36,6 +37,7 @@ function readPlayer(formData: FormData) {
       guardian_name: optionalStr(formData, 'guardian_name'),
       guardian_phone: optionalStr(formData, 'guardian_phone'),
       notes: optionalStr(formData, 'notes'),
+      squad: squadOf(formData),
       is_active: bool(formData, 'is_active'),
       profile_id: optionalStr(formData, 'profile_id'),
     },

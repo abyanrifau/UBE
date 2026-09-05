@@ -1,4 +1,4 @@
-import type { AppRole } from './types';
+import type { AppRole, Squad } from './types';
 
 /**
  * The single source of truth for what each role may do in the UI.
@@ -57,3 +57,52 @@ export const canViewFinance = (r?: AppRole | null) => has(r, FINANCE_VIEWERS);
 export const canManageFinance = (r?: AppRole | null) => has(r, FINANCE_EDITORS);
 /** Create accounts and assign roles. */
 export const canManageAccounts = (r?: AppRole | null) => has(r, OWNERS);
+
+/* ------------------------------------------------------------------ */
+/* Squads                                                              */
+/*                                                                     */
+/* The academy runs a boys squad and a girls squad. Staff work across   */
+/* both. A player belongs to one, and sees that squad plus anything     */
+/* addressed to the whole academy.                                     */
+/*                                                                     */
+/* These mirror public.can_see_squad() in                              */
+/* supabase/migrations/0002_squads.sql.                                */
+/* ------------------------------------------------------------------ */
+
+export const SQUADS: Squad[] = ['boys', 'girls'];
+
+export const SQUAD_LABEL: Record<Squad, string> = {
+  boys: 'Boys',
+  girls: 'Girls',
+};
+
+/** What a squad's own people are called, for prose. */
+export const SQUAD_NOUN: Record<Squad, string> = {
+  boys: 'boys squad',
+  girls: 'girls squad',
+};
+
+/** Staff work across both squads. */
+export const canViewBothSquads = (r?: AppRole | null) => has(r, STAFF);
+
+/**
+ * May this person see rows belonging to `target`?
+ * `target` of null means the whole academy, which everyone can see.
+ */
+export function canViewSquad(
+  role: AppRole | null | undefined,
+  mySquad: Squad | null | undefined,
+  target: Squad | null,
+): boolean {
+  if (target === null) return true;
+  if (canViewBothSquads(role)) return true;
+  return !!mySquad && mySquad === target;
+}
+
+/** The squad tabs this person may open, in display order. */
+export function visibleSquads(
+  role: AppRole | null | undefined,
+  mySquad: Squad | null | undefined,
+): Squad[] {
+  return SQUADS.filter((s) => canViewSquad(role, mySquad, s));
+}

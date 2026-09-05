@@ -1,4 +1,4 @@
-import type { AppRole } from '@/lib/types';
+import type { AppRole, Squad } from '@/lib/types';
 import { ALL_ROLES } from '@/lib/roles';
 
 export type ActionResult = { ok: true; id?: string } | { ok: false; error: string };
@@ -36,6 +36,12 @@ export function num(fd: FormData, key: string): number | null {
 }
 
 export const bool = (fd: FormData, key: string) => fd.get(key) === 'on' || fd.get(key) === 'true';
+
+/** Reads a squad picker. Anything unrecognised means the whole academy. */
+export function squadOf(fd: FormData, key = 'squad'): Squad | null {
+  const v = str(fd, key);
+  return v === 'boys' || v === 'girls' ? v : null;
+}
 
 /** Reads a set of role checkboxes, always keeping admin in the audience. */
 export function roles(fd: FormData, key = 'visible_to_roles'): AppRole[] {

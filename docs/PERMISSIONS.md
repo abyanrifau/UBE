@@ -4,7 +4,7 @@ Two layers enforce this, and they are deliberately kept in sync:
 
 | Layer                        | File                                | Purpose                          |
 | ---------------------------- | ----------------------------------- | -------------------------------- |
-| **Database, the real gate**  | `supabase/migrations/0001_init.sql` | RLS policies. Cannot be bypassed |
+| **Database, the real gate**  | `supabase/migrations/`              | RLS policies. Cannot be bypassed |
 | **UI, what gets rendered**   | `src/lib/roles.ts`                  | Hides links and buttons          |
 
 If you change one, change the other. The UI layer is a convenience only. A
@@ -41,6 +41,53 @@ but not change an entry.
 
 The only role that is genuinely fenced in is Player.
 
+## Squads
+
+The academy runs a boys squad and a girls squad. Every player belongs to one,
+set on their roster row. Events and announcements carry an optional squad:
+tagged rows belong to that squad, untagged rows belong to the whole academy.
+
+| Who      | Sees                                                    |
+| -------- | ------------------------------------------------------- |
+| Staff    | Both squads, plus everything academy-wide               |
+| Player   | Their own squad, plus everything academy-wide           |
+| No squad | Academy-wide rows only                                  |
+
+That is one rule, `public.can_see_squad()`, layered on top of the role
+audience. A row has to clear both to be readable:
+
+```sql
+create policy events_select on public.events for select to authenticated
+  using (
+    public.current_app_role() = any(visible_to_roles)
+    and public.can_see_squad(squad)
+  );
+```
+
+So a girls player is not merely redirected away from `/dashboard/boys`. The
+boys announcements and boys practices never reach her browser on any page,
+including the Academy Dashboard.
+
+### The three views
+
+Dashboard and Schedule each render three ways:
+
+| Route                              | Shows                                                    |
+| ---------------------------------- | -------------------------------------------------------- |
+| `/dashboard`, `/schedule`          | Everything you can see, both squads combined              |
+| `/dashboard/boys`, `/schedule/boys`   | Boys squad, plus anything for the whole academy        |
+| `/dashboard/girls`, `/schedule/girls` | Girls squad, plus anything for the whole academy       |
+
+Squad views keep the academy-wide rows on purpose. The Inter-Island
+Invitational belongs to neither squad and both travel to it, so dropping it
+from a squad schedule would hide a fixture people have to turn up to.
+
+The squad routes redirect anyone not entitled to them. That redirect is the
+polite half of the rule. RLS is the half that actually enforces it.
+
+Mirrored in `src/lib/roles.ts` as `canViewSquad()` and `visibleSquads()`, and
+in `src/lib/squads.ts` as `inSquadView()`.
+
 ## Per-row visibility
 
 Announcements and events each carry a `visible_to_roles` array. A row is
@@ -48,7 +95,10 @@ readable only if the caller's role appears in it:
 
 ```sql
 create policy events_select on public.events for select to authenticated
-  using (public.current_app_role() = any(visible_to_roles));
+  using (
+    public.current_app_role() = any(visible_to_roles)
+    and public.can_see_squad(squad)
+  );
 ```
 
 So an ExCo meeting saved with `{admin,coach,treasurer,exco}` is not merely
@@ -90,6 +140,8 @@ To check by hand, sign in as a player and try:
 - Visiting `/accounts`, redirected to the dashboard.
 - Visiting `/players`, redirected to your own profile.
 - Visiting another player's `/players/<id>`, redirected to your own profile.
+- Visiting the other squad's `/dashboard/<squad>` or `/schedule/<squad>`,
+  redirected back to the academy view.
 - Query Supabase directly, bypassing the app entirely. While signed in as the
   player, open the browser console on any page of the app and run:
 

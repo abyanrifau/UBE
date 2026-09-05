@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
-import type { AcademyEvent, EventType, RsvpStatus } from '@/lib/types';
+import type { AcademyEvent, EventType, RsvpStatus, Squad } from '@/lib/types';
 import { dayKey, formatTime, MONTH_NAMES } from '@/lib/format';
 import { EventCard, EventForm } from '@/components/events';
 import { EVENT_TYPE_LABEL } from '@/lib/events';
@@ -23,10 +23,13 @@ export function ScheduleView({
   events,
   rsvps,
   canManage,
+  squad = null,
 }: {
   events: AcademyEvent[];
   rsvps: Record<string, RsvpStatus>;
   canManage: boolean;
+  /** Which squad view this is. New events default to it. */
+  squad?: Squad | null;
 }) {
   const [view, setView] = useState<ViewMode>('list');
   const [type, setType] = useState<'all' | EventType>('all');
@@ -111,7 +114,11 @@ export function ScheduleView({
       {creating && canManage && (
         <div className="card mb-8 animate-fade-up p-5 sm:p-6">
           <h2 className="mb-5 text-[15px] font-bold">New event</h2>
-          <EventForm onDone={() => setCreating(false)} onCancel={() => setCreating(false)} />
+          <EventForm
+            defaultSquad={squad}
+            onDone={() => setCreating(false)}
+            onCancel={() => setCreating(false)}
+          />
         </div>
       )}
 

@@ -11,6 +11,7 @@ import {
   friendlyError,
   optionalStr,
   roles,
+  squadOf,
   str,
   type ActionResult,
 } from './common';
@@ -40,6 +41,7 @@ function readEvent(formData: FormData) {
       location: optionalStr(formData, 'location'),
       description: optionalStr(formData, 'description'),
       visible_to_roles: roles(formData),
+      squad: squadOf(formData),
       rsvp_enabled: bool(formData, 'rsvp_enabled'),
       is_public: bool(formData, 'is_public'),
     },
@@ -65,8 +67,8 @@ export async function createEvent(formData: FormData): Promise<ActionResult> {
     .single();
 
   if (error) return fail(friendlyError(error));
-  revalidatePath('/schedule');
-  revalidatePath('/dashboard');
+  revalidatePath('/schedule', 'layout');
+  revalidatePath('/dashboard', 'layout');
   revalidatePath('/');
   return done(data.id as string);
 }
@@ -82,9 +84,9 @@ export async function updateEvent(formData: FormData): Promise<ActionResult> {
   const { error } = await supabase.from('events').update(parsed.values).eq('id', id);
 
   if (error) return fail(friendlyError(error));
-  revalidatePath('/schedule');
+  revalidatePath('/schedule', 'layout');
   revalidatePath(`/schedule/${id}`);
-  revalidatePath('/dashboard');
+  revalidatePath('/dashboard', 'layout');
   revalidatePath('/');
   return done(id);
 }
@@ -93,8 +95,8 @@ export async function deleteEvent(id: string): Promise<ActionResult> {
   const supabase = createClient();
   const { error } = await supabase.from('events').delete().eq('id', id);
   if (error) return fail(friendlyError(error));
-  revalidatePath('/schedule');
-  revalidatePath('/dashboard');
+  revalidatePath('/schedule', 'layout');
+  revalidatePath('/dashboard', 'layout');
   revalidatePath('/');
   return done();
 }
@@ -116,9 +118,9 @@ export async function setRsvp(eventId: string, status: RsvpStatus): Promise<Acti
     );
 
   if (error) return fail(friendlyError(error));
-  revalidatePath('/schedule');
+  revalidatePath('/schedule', 'layout');
   revalidatePath(`/schedule/${eventId}`);
-  revalidatePath('/dashboard');
+  revalidatePath('/dashboard', 'layout');
   return done();
 }
 

@@ -3,7 +3,7 @@
 import { useEffect, useId, useRef, useState, useTransition, type ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import { ALL_ROLES, ROLE_LABEL } from '@/lib/roles';
-import type { AppRole } from '@/lib/types';
+import type { AppRole, Squad } from '@/lib/types';
 import { Notice } from '@/components/ui';
 
 /* ------------------------------------------------------------------ */
@@ -134,6 +134,42 @@ export function RoleAudience({
         {hint ?? 'Admins always see everything. Untick a role to hide this from them.'}
       </p>
     </fieldset>
+  );
+}
+
+/**
+ * Which squad a row belongs to. The empty option means different things in
+ * different places, so the caller names it: "Whole academy" for an event or
+ * announcement, "Not assigned" for a player.
+ */
+export function SquadField({
+  name = 'squad',
+  defaultValue,
+  label = 'Team',
+  emptyLabel = 'Whole academy',
+  hint,
+  className,
+}: {
+  name?: string;
+  defaultValue?: Squad | null;
+  label?: string;
+  emptyLabel?: string;
+  hint?: string;
+  className?: string;
+}) {
+  return (
+    <Select
+      name={name}
+      label={label}
+      className={className}
+      defaultValue={defaultValue ?? ''}
+      hint={hint}
+      options={[
+        { value: '', label: emptyLabel },
+        { value: 'boys', label: 'Boys squad' },
+        { value: 'girls', label: 'Girls squad' },
+      ]}
+    />
   );
 }
 

@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import type { AcademyEvent, AppRole, RsvpStatus } from '@/lib/types';
+import type { AcademyEvent, AppRole, RsvpStatus, Squad } from '@/lib/types';
 import { ROLE_LABEL } from '@/lib/roles';
 import { formatDate, formatTime, relativeDay, toLocalInput } from '@/lib/format';
 import {
@@ -12,9 +12,11 @@ import {
   Field,
   RoleAudience,
   Select,
+  SquadField,
   TextArea,
 } from '@/components/form';
 import { Tag } from '@/components/ui';
+import { SquadTag } from '@/components/squad';
 import { createEvent, setRsvp, updateEvent } from '@/lib/actions/events';
 import { EVENT_TYPE_LABEL, EVENT_TYPE_OPTIONS } from '@/lib/events';
 
@@ -52,6 +54,7 @@ export function EventCard({
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-1.5">
             <Tag solid>{EVENT_TYPE_LABEL[event.type]}</Tag>
+            <SquadTag squad={event.squad} />
             {relative && <Tag>{relative}</Tag>}
             {restricted && (
               <Tag>
@@ -159,10 +162,13 @@ export function RsvpControl({
 
 export function EventForm({
   event,
+  defaultSquad = null,
   onDone,
   onCancel,
 }: {
   event?: AcademyEvent;
+  /** Pre-selected squad when adding from a squad schedule. */
+  defaultSquad?: Squad | null;
   onDone?: (id?: string) => void;
   onCancel?: () => void;
 }) {
@@ -232,6 +238,12 @@ export function EventForm({
         rows={3}
         defaultValue={event?.description ?? ''}
         placeholder="Bring both kits. Warm-up starts 15 minutes early."
+      />
+
+      <SquadField
+        defaultValue={editing ? event.squad : defaultSquad}
+        label="Which squad"
+        hint="Whole academy events show on both schedules. A squad event shows only on theirs."
       />
 
       <RoleAudience

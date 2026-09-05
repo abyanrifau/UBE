@@ -1,11 +1,21 @@
 'use client';
 
 import { useState } from 'react';
-import type { Announcement, AppRole } from '@/lib/types';
+import type { Announcement, AppRole, Squad } from '@/lib/types';
 import { ROLE_LABEL } from '@/lib/roles';
 import { formatDateTime } from '@/lib/format';
-import { ActionForm, ConfirmButton, Disclosure, Field, RoleAudience, TextArea, Checkbox } from '@/components/form';
+import {
+  ActionForm,
+  ConfirmButton,
+  Disclosure,
+  Field,
+  RoleAudience,
+  SquadField,
+  TextArea,
+  Checkbox,
+} from '@/components/form';
 import { EmptyState, Tag } from '@/components/ui';
+import { SquadTag } from '@/components/squad';
 import { PinIcon } from '@/components/nav-icons';
 import {
   createAnnouncement,
@@ -16,7 +26,7 @@ import {
 
 const ALL = 5; // number of roles, used to spot an "everyone" audience
 
-export function AnnouncementComposer() {
+export function AnnouncementComposer({ defaultSquad = null }: { defaultSquad?: Squad | null }) {
   return (
     <Disclosure trigger="New announcement" title="Post an announcement">
       {(close) => (
@@ -39,6 +49,10 @@ export function AnnouncementComposer() {
             required
             rows={5}
             placeholder="Write the details here. Line breaks are kept."
+          />
+          <SquadField
+            defaultValue={defaultSquad}
+            hint="Whole academy posts show on every dashboard. A squad post shows only on theirs."
           />
           <RoleAudience />
           <Checkbox name="pinned" label="Pin to the top of the dashboard" />
@@ -103,6 +117,7 @@ function AnnouncementCard({
           <input type="hidden" name="id" value={a.id} />
           <Field name="title" label="Title" required defaultValue={a.title} />
           <TextArea name="body" label="Message" required rows={5} defaultValue={a.body} />
+          <SquadField defaultValue={a.squad} />
           <RoleAudience defaultValue={a.visible_to_roles} />
           <Checkbox name="pinned" label="Pinned" defaultChecked={a.pinned} />
         </ActionForm>
@@ -117,6 +132,7 @@ function AnnouncementCard({
                     Pinned
                   </span>
                 )}
+                <SquadTag squad={a.squad} />
                 {restricted && (
                   <Tag>
                     {a.visible_to_roles

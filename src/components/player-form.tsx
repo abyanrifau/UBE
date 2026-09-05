@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import type { Player } from '@/lib/types';
-import { ActionForm, Checkbox, Field, Select, TextArea } from '@/components/form';
+import { ActionForm, Checkbox, Field, Select, SquadField, TextArea } from '@/components/form';
 import { createPlayer, updatePlayer } from '@/lib/actions/players';
 
 const POSITIONS = [
@@ -62,7 +62,13 @@ export function PlayerForm({
         />
       </div>
 
-      <div className="grid gap-5 sm:grid-cols-3">
+      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <SquadField
+          defaultValue={player?.squad}
+          label="Team"
+          emptyLabel="Not assigned"
+          hint="Decides which roster section, schedule and dashboard they belong to."
+        />
         <Select
           name="position"
           label="Position"

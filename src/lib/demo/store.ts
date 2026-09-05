@@ -8,6 +8,7 @@ import type {
   MatchStat,
   Player,
   Profile,
+  Squad,
 } from '@/lib/types';
 import {
   canManageFinance,
@@ -68,16 +69,26 @@ function freshDb(): DemoDb {
 const globalForDemo = globalThis as unknown as { __ubeDemoDb?: DemoDb };
 export const db: DemoDb = (globalForDemo.__ubeDemoDb ??= freshDb());
 
-export type DemoContext = { userId: string | null; role: AppRole | null };
+export type DemoContext = {
+  userId: string | null;
+  role: AppRole | null;
+  /** The squad of the caller's own roster row, if they have one. */
+  squad: Squad | null;
+};
 
 export function contextFor(userId: string | null): DemoContext {
-  if (!userId) return { userId: null, role: null };
+  if (!userId) return { userId: null, role: null, squad: null };
   const profile = db.profiles.find((p) => p.id === userId && p.is_active);
-  return { userId, role: profile?.role ?? null };
+  const player = db.players.find((p) => p.profile_id === userId);
+  return { userId, role: profile?.role ?? null, squad: player?.squad ?? null };
 }
 
 const myPlayerId = (ctx: DemoContext) =>
   db.players.find((p) => p.profile_id === ctx.userId)?.id ?? null;
+
+/** Mirrors public.can_see_squad(): null is academy-wide, staff see both. */
+const seesSquad = (ctx: DemoContext, target: Squad | null) =>
+  target === null || isStaff(ctx.role) || (!!ctx.squad && ctx.squad === target);
 
 /* ------------------------------------------------------------------ */
 /* Derived views                                                       */
@@ -162,7 +173,14 @@ function publicEvents() {
   return db.events
     .filter((e) => e.is_public && Date.parse(e.starts_at) >= cutoff)
     .sort((a, b) => Date.parse(a.starts_at) - Date.parse(b.starts_at))
-    .map(({ id, title, type, starts_at, location }) => ({ id, title, type, starts_at, location }));
+    .map(({ id, title, type, starts_at, location, squad }) => ({
+      id,
+      title,
+      type,
+      starts_at,
+      location,
+      squad,
+    }));
 }
 
 /* ------------------------------------------------------------------ */
@@ -183,11 +201,16 @@ export function readTable(table: string, ctx: DemoContext): Record<string, unkno
     case 'players':
       return isStaff(role) ? db.players : db.players.filter((p) => p.profile_id === ctx.userId);
 
+    // Role audience and squad both have to clear, same as the RLS policy.
     case 'events':
-      return db.events.filter((e) => e.visible_to_roles.includes(role));
+      return db.events.filter(
+        (e) => e.visible_to_roles.includes(role) && seesSquad(ctx, e.squad),
+      );
 
     case 'announcements':
-      return db.announcements.filter((a) => a.visible_to_roles.includes(role));
+      return db.announcements.filter(
+        (a) => a.visible_to_roles.includes(role) && seesSquad(ctx, a.squad),
+      );
 
     case 'event_rsvps': {
       if (!isStaff(role)) return db.event_rsvps.filter((r) => r.profile_id === ctx.userId);

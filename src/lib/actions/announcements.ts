@@ -2,7 +2,16 @@
 
 import { revalidatePath } from 'next/cache';
 import { createClient, getSession } from '@/lib/supabase/server';
-import { bool, done, fail, friendlyError, roles, str, type ActionResult } from './common';
+import {
+  bool,
+  done,
+  fail,
+  friendlyError,
+  roles,
+  squadOf,
+  str,
+  type ActionResult,
+} from './common';
 
 export async function createAnnouncement(formData: FormData): Promise<ActionResult> {
   const session = await getSession();
@@ -19,12 +28,13 @@ export async function createAnnouncement(formData: FormData): Promise<ActionResu
     body,
     pinned: bool(formData, 'pinned'),
     visible_to_roles: roles(formData),
+    squad: squadOf(formData),
     author_id: session.userId,
     author_name: session.profile.full_name || session.profile.email,
   });
 
   if (error) return fail(friendlyError(error));
-  revalidatePath('/dashboard');
+  revalidatePath('/dashboard', 'layout');
   return done();
 }
 
@@ -44,11 +54,12 @@ export async function updateAnnouncement(formData: FormData): Promise<ActionResu
       body,
       pinned: bool(formData, 'pinned'),
       visible_to_roles: roles(formData),
+      squad: squadOf(formData),
     })
     .eq('id', id);
 
   if (error) return fail(friendlyError(error));
-  revalidatePath('/dashboard');
+  revalidatePath('/dashboard', 'layout');
   return done();
 }
 
@@ -56,7 +67,7 @@ export async function deleteAnnouncement(id: string): Promise<ActionResult> {
   const supabase = createClient();
   const { error } = await supabase.from('announcements').delete().eq('id', id);
   if (error) return fail(friendlyError(error));
-  revalidatePath('/dashboard');
+  revalidatePath('/dashboard', 'layout');
   return done();
 }
 
@@ -64,6 +75,6 @@ export async function togglePinned(id: string, pinned: boolean): Promise<ActionR
   const supabase = createClient();
   const { error } = await supabase.from('announcements').update({ pinned }).eq('id', id);
   if (error) return fail(friendlyError(error));
-  revalidatePath('/dashboard');
+  revalidatePath('/dashboard', 'layout');
   return done();
 }

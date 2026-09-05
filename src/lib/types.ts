@@ -5,6 +5,13 @@ export type RsvpStatus = 'going' | 'not_going' | 'maybe';
 export type FinanceKind = 'income' | 'expense';
 export type ThemePreference = 'light' | 'dark' | 'system';
 
+/**
+ * The academy runs two squads. On a player this is which squad they are in,
+ * on an event or announcement it is who the row is for, where null means the
+ * whole academy.
+ */
+export type Squad = 'boys' | 'girls';
+
 export type Profile = {
   id: string;
   email: string;
@@ -32,6 +39,7 @@ export type Player = {
   guardian_name: string | null;
   guardian_phone: string | null;
   notes: string | null;
+  squad: Squad | null;
   is_active: boolean;
   created_at: string;
   updated_at: string;
@@ -46,6 +54,7 @@ export type AcademyEvent = {
   location: string | null;
   description: string | null;
   visible_to_roles: AppRole[];
+  squad: Squad | null;
   rsvp_enabled: boolean;
   is_public: boolean;
   created_by: string | null;
@@ -94,6 +103,7 @@ export type Announcement = {
   body: string;
   pinned: boolean;
   visible_to_roles: AppRole[];
+  squad: Squad | null;
   author_id: string | null;
   author_name: string;
   created_at: string;

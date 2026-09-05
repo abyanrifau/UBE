@@ -58,8 +58,9 @@ export function AppShell({
     });
   }, []);
 
-  const isActive = (href: string) =>
-    href === '/dashboard' ? pathname === href : pathname.startsWith(href);
+  // Dashboard and Schedule both have squad routes underneath them now, so a
+  // nav item stays lit for its whole subtree.
+  const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
   return (
     <ThemeProvider initial={theme} onPersist={persistTheme}>
