@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type { FinanceEntry } from '@/lib/types';
 import { formatDate, money, todayInput } from '@/lib/format';
 import { ActionForm, ConfirmButton, Field, Select, TextArea } from '@/components/form';
@@ -41,6 +41,18 @@ export function FinanceLedger({
 }) {
   const [adding, setAdding] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const editorRef = useRef<HTMLDivElement>(null);
+
+  // The ledger runs to dozens of rows. Opening the editor without bringing it
+  // into view looks exactly like the Edit button doing nothing.
+  useEffect(() => {
+    if (!editingId) return;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    editorRef.current?.scrollIntoView({
+      behavior: reduced ? 'auto' : 'smooth',
+      block: 'center',
+    });
+  }, [editingId]);
   const [monthFilter, setMonthFilter] = useState<'all' | number>('all');
   const [kindFilter, setKindFilter] = useState<'all' | 'income' | 'expense'>('all');
 
@@ -127,6 +139,18 @@ export function FinanceLedger({
         </div>
       )}
 
+      {editingId && canManage && (
+        <div ref={editorRef} className="card mb-6 animate-fade-up p-5 sm:p-6">
+          <h3 className="mb-5 text-[15px] font-bold">Edit entry</h3>
+          <EntryForm
+            year={year}
+            entry={entries.find((e) => e.id === editingId)}
+            onDone={() => setEditingId(null)}
+            onCancel={() => setEditingId(null)}
+          />
+        </div>
+      )}
+
       {filtered.length === 0 ? (
         <EmptyState
           title="No entries"
@@ -151,7 +175,7 @@ export function FinanceLedger({
               </thead>
               <tbody className="divide-line">
                 {filtered.map((entry) => (
-                  <tr key={entry.id}>
+                  <tr key={entry.id} className={editingId === entry.id ? 'bg-subtle' : ''}>
                     <td className="whitespace-nowrap px-3.5 py-3 tabular-nums text-muted">
                       {formatDate(entry.entry_date)}
                     </td>
@@ -198,18 +222,6 @@ export function FinanceLedger({
               </tbody>
             </table>
           </div>
-
-          {editingId && canManage && (
-            <div className="animate-fade-up border-t border-line bg-subtle p-5 sm:p-6">
-              <h3 className="mb-5 text-[15px] font-bold">Edit entry</h3>
-              <EntryForm
-                year={year}
-                entry={entries.find((e) => e.id === editingId)}
-                onDone={() => setEditingId(null)}
-                onCancel={() => setEditingId(null)}
-              />
-            </div>
-          )}
         </div>
       )}
     </div>

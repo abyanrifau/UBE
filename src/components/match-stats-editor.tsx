@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { MatchStat } from '@/lib/types';
 import { saveMatchStat } from '@/lib/actions/events';
 import { ActionForm, TextArea } from '@/components/form';
@@ -28,6 +28,18 @@ type Row = {
  */
 export function MatchStatsEditor({ eventId, rows }: { eventId: string; rows: Row[] }) {
   const [openFor, setOpenFor] = useState<string | null>(null);
+  const editorRef = useRef<HTMLDivElement>(null);
+
+  // Same reason as the finance ledger: the panel opens below the table, so
+  // with a full squad it can land off screen and read as a dead button.
+  useEffect(() => {
+    if (!openFor) return;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    editorRef.current?.scrollIntoView({
+      behavior: reduced ? 'auto' : 'smooth',
+      block: 'center',
+    });
+  }, [openFor]);
 
   if (rows.length === 0) {
     return (
@@ -54,7 +66,10 @@ export function MatchStatsEditor({ eventId, rows }: { eventId: string; rows: Row
           </thead>
           <tbody className="divide-line">
             {rows.map((row) => (
-              <tr key={row.playerId}>
+              <tr
+                  key={row.playerId}
+                  className={openFor === row.playerId ? 'bg-subtle' : ''}
+                >
                 <td className="px-3.5 py-2.5">
                   <span className="flex items-center gap-2.5">
                     <span className="w-6 text-right text-[11px] font-bold tabular-nums text-muted">
@@ -84,7 +99,7 @@ export function MatchStatsEditor({ eventId, rows }: { eventId: string; rows: Row
       </div>
 
       {openFor && (
-        <div className="animate-fade-up border-t border-line bg-subtle p-5">
+        <div ref={editorRef} className="animate-fade-up border-t border-line bg-subtle p-5">
           <StatForm
             eventId={eventId}
             row={rows.find((r) => r.playerId === openFor)!}
