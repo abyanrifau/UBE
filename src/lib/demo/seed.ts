@@ -83,7 +83,7 @@ export const seedProfiles: Profile[] = [
   {
     ...profileBase,
     id: PROFILE_IDS.player,
-    email: 'player@ube.academy',
+    email: 'boy@ube.academy',
     full_name: 'Mohamed Sirajj',
     role: 'player',
     phone: '+960 794 6651',
@@ -91,7 +91,7 @@ export const seedProfiles: Profile[] = [
   {
     ...profileBase,
     id: PROFILE_IDS.player2,
-    email: 'zaha@ube.academy',
+    email: 'girl@ube.academy',
     full_name: 'Mariyam Zaha',
     role: 'player',
     phone: null,

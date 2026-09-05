@@ -57,14 +57,14 @@ export const DEMO_LOGINS: DemoAccount[] = [
   },
   {
     id: PROFILE_IDS.player,
-    email: 'player@ube.academy',
+    email: 'boy@ube.academy',
     name: 'Mohamed Sirajj',
     role: 'player',
     blurb: 'Boys squad. Own profile, schedule, announcements.',
   },
   {
     id: PROFILE_IDS.player2,
-    email: 'zaha@ube.academy',
+    email: 'girl@ube.academy',
     name: 'Mariyam Zaha',
     role: 'player',
     blurb: 'Girls squad. The mirror image of the boys player.',

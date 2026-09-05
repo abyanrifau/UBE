@@ -44,7 +44,7 @@ npm run dev
 Sign in at <http://localhost:3000/login>. The screen lists five accounts, one
 per role. Password is `ubedemo` for all of them.
 
-Sign in as `player@ube.academy` to watch the restrictions work: Financials and
+Sign in as `boy@ube.academy` to watch the restrictions work: Financials and
 the roster are simply not reachable. Full details in
 [`docs/DEMO.md`](docs/DEMO.md).
 

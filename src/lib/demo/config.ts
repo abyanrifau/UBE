@@ -4,7 +4,9 @@
  *
  * When NEXT_PUBLIC_DEMO_MODE=true, every Supabase client in the app is
  * swapped for an in-memory fake (src/lib/demo/client.ts) seeded with a
- * realistic academy. Sign-in accepts five fixed accounts, one per role.
+ * realistic academy. Sign-in accepts six fixed accounts: one per role, plus a
+ * second player so both squads can be demonstrated. They live in
+ * src/lib/demo/accounts.ts, which is the only list of them.
  *
  * ⚠ This is an authentication bypass. It is off unless the flag is explicitly
  *   set, a banner is shown on every screen while it is on, and it must never
@@ -19,11 +21,3 @@ export const DEMO_PASSWORD = 'ubedemo';
 
 /** Readable cookie (not httpOnly) so the browser shim can set it directly. */
 export const DEMO_COOKIE = 'ube-demo-session';
-
-export const DEMO_ACCOUNTS = [
-  { email: 'admin@ube.academy', label: 'Admin' },
-  { email: 'treasurer@ube.academy', label: 'Treasurer' },
-  { email: 'exco@ube.academy', label: 'ExCo Member' },
-  { email: 'coach@ube.academy', label: 'Coach' },
-  { email: 'player@ube.academy', label: 'Player' },
-] as const;

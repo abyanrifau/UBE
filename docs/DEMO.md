@@ -20,8 +20,8 @@ Password is **`ubedemo`** for every account.
 | `coach@ube.academy`     | Coach     | Everything. The coach owns the academy              |
 | `treasurer@ube.academy` | Treasurer | Full control of Financials, ExCo access elsewhere   |
 | `exco@ube.academy`      | ExCo      | Reads Financials, cannot edit them                  |
-| `player@ube.academy`    | Player    | Boys squad. Own profile, schedule, announcements    |
-| `zaha@ube.academy`      | Player    | Girls squad. The mirror image of the boys player    |
+| `boy@ube.academy`    | Player    | Boys squad. Own profile, schedule, announcements    |
+| `girl@ube.academy`      | Player    | Girls squad. The mirror image of the boys player    |
 
 ## What is in the sample data
 
@@ -46,7 +46,7 @@ statement always look current. Amounts are in rufiyaa.
 
 ## Seeing the permission rules work
 
-Sign in as `player@ube.academy` and try:
+Sign in as `boy@ube.academy` and try:
 
 | You do this                            | What happens                                |
 | -------------------------------------- | ------------------------------------------- |
@@ -60,7 +60,7 @@ Sign in as `player@ube.academy` and try:
 | Open `/dashboard/girls`                | Redirected, the boys player has no business there |
 | Look anywhere at all                   | No girls practice, no girls announcement, on any page |
 
-Sign in as `player@ube.academy` (boys) and `zaha@ube.academy` (girls) in turn
+Sign in as `boy@ube.academy` (boys) and `girl@ube.academy` (girls) in turn
 to see the mirror image of each other.
 
 Then sign in as `coach@ube.academy`. Everything appears, both squads plus
