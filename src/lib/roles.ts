@@ -57,6 +57,13 @@ export const canViewFinance = (r?: AppRole | null) => has(r, FINANCE_VIEWERS);
 export const canManageFinance = (r?: AppRole | null) => has(r, FINANCE_EDITORS);
 /** Create accounts and assign roles. */
 export const canManageAccounts = (r?: AppRole | null) => has(r, OWNERS);
+/**
+ * The coach hub: session planning, who is coming, the notice board and the
+ * squad in one place. Owners only, which is the Coach and the Admin.
+ */
+export const canUseCoachHub = (r?: AppRole | null) => has(r, OWNERS);
+/** Read and write session plans. Same audience as the hub they live in. */
+export const canPlanSessions = (r?: AppRole | null) => has(r, OWNERS);
 
 /* ------------------------------------------------------------------ */
 /* Squads                                                              */

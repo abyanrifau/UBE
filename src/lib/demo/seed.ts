@@ -6,6 +6,7 @@ import type {
   FinanceEntry,
   MatchStat,
   Player,
+  EventPlan,
   ExcoRole,
   Profile,
   Squad,
@@ -538,6 +539,39 @@ export const seedAnnouncements: Announcement[] = [
     updated_at: iso(-11, 10),
   },
 ];
+
+/* ------------------------------------------------------------------ */
+/* Session plans. Coach working material, owners only.                 */
+/* ------------------------------------------------------------------ */
+
+const PLAN_TEXTS = [
+  `Warm-up 15 min, then 25 min serve receive under pressure.
+
+Three-person passing to target, server on the whistle. Rotate every 90 seconds.
+
+Finish with 6v6, first to 15. The receiving team starts down 0-3.`,
+  `Blocking footwork, 20 min. Slide step then close.
+
+Middles pair with outsides for read drills. Watch the setter, not the ball.
+
+Game to 21, blocks count double.`,
+  `Light session before the fixture.
+
+Serve targeting zones 1 and 5, 20 balls each. Walk the rotations for the new lineup.
+
+No full jumps. Everyone out by 21:30.`,
+];
+
+export const seedEventPlans: EventPlan[] = seedEvents
+  .filter((e) => e.type === 'practice' && Date.parse(e.starts_at) >= now.getTime())
+  .slice(0, 3)
+  .map((event, i) => ({
+    event_id: event.id,
+    plan: PLAN_TEXTS[i % PLAN_TEXTS.length],
+    updated_by: PROFILE_IDS.coach,
+    updated_by_name: 'Hassan Niyaz',
+    updated_at: iso(-1, 9),
+  }));
 
 /* ------------------------------------------------------------------ */
 /* Finance. Amounts in rufiyaa.                                        */

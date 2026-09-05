@@ -136,6 +136,15 @@ export type FinanceEntry = {
   updated_at: string;
 };
 
+/** Coach-facing plan for a session. Owners only, never sent to a player. */
+export type EventPlan = {
+  event_id: string;
+  plan: string;
+  updated_by: string | null;
+  updated_by_name: string;
+  updated_at: string;
+};
+
 export type MonthlySummary = {
   month: string;
   year: number;

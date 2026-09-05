@@ -34,6 +34,7 @@ also being the person running training.
 | **Financials (read)**                |   ✓   |   ✓   |     ✓     |  ✓   |   .    |
 | **Financials (add, edit, delete)**   |   ✓   |   ✓   |     ✓     |  .   |   .    |
 | Create accounts, assign roles        |   ✓   |   ✓   |     .     |  .   |   .    |
+| Coach hub and session plans          |   ✓   |   ✓   |     .     |  .   |   .    |
 
 The Treasurer is an ExCo member with the books added: full control of
 Financials, standard ExCo access everywhere else. ExCo can read the statements
@@ -87,6 +88,25 @@ polite half of the rule. RLS is the half that actually enforces it.
 
 Mirrored in `src/lib/roles.ts` as `canViewSquad()` and `visibleSquads()`, and
 in `src/lib/squads.ts` as `inSquadView()`.
+
+## The coach hub
+
+`/coach` gathers what running a week actually needs: planning a session,
+seeing who has replied, posting to the notice board and scanning the squad.
+Owners only, which is the Coach and the Admin.
+
+Session plans live in their own table, `event_plans`, rather than as another
+column on `events`. RLS works on rows, not columns, so a column on `events`
+would be handed to every player who can see the event no matter what the UI
+chose to render. A separate table gets its own policy:
+
+```sql
+create policy event_plans_select on public.event_plans for select to authenticated
+  using (public.is_owner());
+```
+
+So a player reading their own practice sees the title, time and the note
+addressed to them, and never the drill list.
 
 ## ExCo posts are not permissions
 

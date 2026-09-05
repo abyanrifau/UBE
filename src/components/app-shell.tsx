@@ -13,6 +13,7 @@ import { initials } from '@/lib/format';
 import type { AppRole, ThemePreference } from '@/lib/types';
 import {
   AccountsIcon,
+  CoachIcon,
   DashboardIcon,
   FinanceIcon,
   PlayersIcon,
@@ -22,6 +23,7 @@ import {
 
 export const NAV_ICONS = {
   dashboard: DashboardIcon,
+  coach: CoachIcon,
   schedule: ScheduleIcon,
   players: PlayersIcon,
   financials: FinanceIcon,

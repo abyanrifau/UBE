@@ -3,6 +3,7 @@ import type {
   Announcement,
   AppRole,
   AttendanceRow,
+  EventPlan,
   EventRsvp,
   FinanceEntry,
   MatchStat,
@@ -22,6 +23,7 @@ import {
   seedAnnouncements,
   seedAttendance,
   seedEvents,
+  seedEventPlans,
   seedFinanceEntries,
   seedMatchStats,
   seedPlayers,
@@ -47,6 +49,7 @@ export type DemoDb = {
   match_stats: MatchStat[];
   announcements: Announcement[];
   finance_entries: FinanceEntry[];
+  event_plans: EventPlan[];
 };
 
 const clone = <T,>(rows: T[]): T[] => rows.map((r) => ({ ...r }));
@@ -61,6 +64,7 @@ function freshDb(): DemoDb {
     match_stats: clone(seedMatchStats),
     announcements: clone(seedAnnouncements),
     finance_entries: clone(seedFinanceEntries),
+    event_plans: clone(seedEventPlans),
   };
 }
 
@@ -242,6 +246,10 @@ export function readTable(table: string, ctx: DemoContext): Record<string, unkno
     case 'finance_category_summary':
       return canViewFinance(role) ? financeByCategory() : [];
 
+    // Session plans are coach working material, owners only.
+    case 'event_plans':
+      return isOwner(role) ? db.event_plans : [];
+
     case 'player_attendance_stats': {
       if (isStaff(role)) return attendanceStats();
       const mine = myPlayerId(ctx);
@@ -280,6 +288,8 @@ export function checkWrite(
       return canManageRoster(role) ? null : denied;
     case 'announcements':
       return canPostAnnouncements(role) ? null : denied;
+    case 'event_plans':
+      return isOwner(role) ? null : denied;
     case 'event_rsvps':
       return row && row.profile_id !== ctx.userId ? denied : null;
     case 'profiles':

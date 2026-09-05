@@ -55,6 +55,14 @@ export const AccountsIcon = ({ className }: IconProps) => (
   </svg>
 );
 
+export const CoachIcon = ({ className }: IconProps) => (
+  <svg {...svg(className)}>
+    <path d="M4 9h9a4 4 0 1 1 0 8H8a4 4 0 0 1-4-4Z" />
+    <path d="M13 9l6-3" />
+    <circle cx="8" cy="13" r="1.4" />
+  </svg>
+);
+
 export const ChevronRight = ({ className }: IconProps) => (
   <svg {...svg(className)}>
     <path d="m9 5 7 7-7 7" />

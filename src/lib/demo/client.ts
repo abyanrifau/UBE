@@ -170,6 +170,8 @@ class DemoQuery implements PromiseLike<Result<unknown>> {
             updated_at: nowIso(),
             ...item,
           };
+          // event_plans is keyed by event_id, so a generated id is noise.
+          if (this.table === 'event_plans') delete row.id;
           rows.push(row);
           written.push(row);
         }

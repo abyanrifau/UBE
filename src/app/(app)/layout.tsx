@@ -1,6 +1,6 @@
 import { requireSession } from '@/lib/supabase/server';
 import { AppShell, type NavItem } from '@/components/app-shell';
-import { canManageAccounts, canViewFinance, canViewRoster } from '@/lib/roles';
+import { canManageAccounts, canUseCoachHub, canViewFinance, canViewRoster } from '@/lib/roles';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,6 +13,10 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     { href: '/schedule', label: 'Schedule', short: 'Schedule', icon: 'schedule' },
   ];
 
+  // The coach hub sits early: for the Coach it is the screen they open first.
+  if (canUseCoachHub(role)) {
+    nav.push({ href: '/coach', label: 'Coach', short: 'Coach', icon: 'coach' });
+  }
   if (canViewRoster(role)) {
     nav.push({ href: '/players', label: 'Players', short: 'Players', icon: 'players' });
   }

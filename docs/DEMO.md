@@ -43,6 +43,7 @@ statement always look current. Amounts are in rufiyaa.
 - **Match stats** for eight players from the past friendly.
 - **Six announcements**, two pinned, one restricted to the committee, and one
   each addressed to the boys and girls squads.
+- **Session plans** on the next few practices, visible only in the coach hub.
 - **Finance entries** for every month of the current year to date, across
   eleven categories, which roll up into the monthly and yearly statements.
 
@@ -66,7 +67,9 @@ Sign in as `boy@ube.academy` (boys) and `girl@ube.academy` (girls) in turn
 to see the mirror image of each other.
 
 Then sign in as `coach@ube.academy`. Everything appears, both squads plus
-Financials and Manage Accounts, because the coach owns the academy. Compare that
+Financials, Manage Accounts and the Coach hub, because the coach owns the
+academy. The hub is the quickest way to see the whole thing working: plan a
+practice, watch who is going, post a notice, scan the roster. Compare that
 with `exco@ube.academy`, who can read the statements but has no Add entry
 button and no Accounts tab.
 
