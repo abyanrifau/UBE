@@ -1,9 +1,10 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import type { MatchStat } from '@/lib/types';
+import type { ExcoRole, MatchStat } from '@/lib/types';
 import { saveMatchStat } from '@/lib/actions/events';
 import { ActionForm, TextArea } from '@/components/form';
+import { ExcoStar } from '@/components/exco-star';
 
 const FIELDS = [
   { name: 'points', label: 'Pts' },
@@ -19,6 +20,7 @@ type Row = {
   playerId: string;
   name: string;
   jersey: number | null;
+  excoRole: ExcoRole | null;
   stat: MatchStat | null;
 };
 
@@ -76,6 +78,7 @@ export function MatchStatsEditor({ eventId, rows }: { eventId: string; rows: Row
                       {row.jersey ?? '–'}
                     </span>
                     <span className="truncate font-medium">{row.name}</span>
+                    <ExcoStar role={row.excoRole} />
                   </span>
                 </td>
                 {FIELDS.map((f) => (

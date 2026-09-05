@@ -31,6 +31,8 @@ statement always look current. Amounts are in rufiyaa.
 - **14 players**, 13 active, split into a boys squad of seven and a girls
   squad of six, with positions, heights, dates of birth, and guardian details
   for the few who are under 18. Three are linked to logins.
+- **All seven ExCo posts** are filled, so every star and tooltip is visible on
+  the roster. The posts are labels only and grant no access.
 - **23 events** across the last three weeks and the next month. The girls
   train at 18:00 and the boys at 20:00, each squad has its own fixtures, and
   the conditioning session, the Inter-Island Invitational and the squad night

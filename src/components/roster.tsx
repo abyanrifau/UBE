@@ -7,6 +7,7 @@ import { SQUAD_LABEL } from '@/lib/roles';
 import { age } from '@/lib/format';
 import { PlayerForm } from '@/components/player-form';
 import { EmptyState } from '@/components/ui';
+import { ExcoStar } from '@/components/exco-star';
 
 export type RosterRow = Player & { attendance_pct: number | null; logged: number };
 
@@ -176,9 +177,12 @@ function PlayerGroup({ rows }: { rows: RosterRow[] }) {
                   {p.jersey_number ?? '–'}
                 </td>
                 <td className="px-3 py-3">
-                  <Link href={`/players/${p.id}`} className="font-semibold hover:underline">
-                    {p.full_name}
-                  </Link>
+                  <span className="inline-flex items-center gap-1.5">
+                    <Link href={`/players/${p.id}`} className="font-semibold hover:underline">
+                      {p.full_name}
+                    </Link>
+                    <ExcoStar role={p.exco_role} />
+                  </span>
                   {!p.is_active && (
                     <span className="ml-2 text-[11px] uppercase tracking-wider text-muted">
                       Archived
@@ -214,7 +218,10 @@ function PlayerGroup({ rows }: { rows: RosterRow[] }) {
                   {p.jersey_number ?? '–'}
                 </span>
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-[15px] font-bold">{p.full_name}</p>
+                  <p className="flex items-center gap-1.5 text-[15px] font-bold">
+                    <span className="truncate">{p.full_name}</span>
+                    <ExcoStar role={p.exco_role} focusable={false} />
+                  </p>
                   <p className="mt-0.5 text-[13px] text-muted">
                     {p.position ?? 'Position not set'}
                     {!p.is_active && ' · Archived'}

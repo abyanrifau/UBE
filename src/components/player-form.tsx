@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import type { Player } from '@/lib/types';
 import { ActionForm, Checkbox, Field, Select, SquadField, TextArea } from '@/components/form';
+import { EXCO_ROLES, EXCO_ROLE_LABEL } from '@/lib/roles';
 import { createPlayer, updatePlayer } from '@/lib/actions/players';
 
 const POSITIONS = [
@@ -131,6 +132,17 @@ export function PlayerForm({
           defaultValue={player?.guardian_phone ?? ''}
         />
       </div>
+
+      <Select
+        name="exco_role"
+        label="ExCo post"
+        defaultValue={player?.exco_role ?? ''}
+        hint="Shows a star next to their name. It does not grant any access on its own."
+        options={[
+          { value: '', label: 'None' },
+          ...EXCO_ROLES.map((r) => ({ value: r, label: EXCO_ROLE_LABEL[r] })),
+        ]}
+      />
 
       <TextArea
         name="notes"

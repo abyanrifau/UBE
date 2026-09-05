@@ -4,6 +4,7 @@ import { createClient, requireSession } from '@/lib/supabase/server';
 import { canManageRoster, canViewRoster, isOwner } from '@/lib/roles';
 import type { AttendanceStats, Player, Profile } from '@/lib/types';
 import { BackLink, PageHeader } from '@/components/ui';
+import { ExcoStar } from '@/components/exco-star';
 import { PlayerDetail, type AttendanceHistoryRow, type StatHistoryRow } from '@/components/player-detail';
 import { PlayerAdmin } from '@/components/player-admin';
 import { loadPlayerHistory } from '@/lib/queries/player-history';
@@ -52,7 +53,12 @@ export default async function PlayerPage({ params }: { params: { id: string } })
       </div>
 
       <PageHeader
-        title={player.full_name}
+        title={
+          <span className="inline-flex items-center gap-2.5">
+            {player.full_name}
+            <ExcoStar role={player.exco_role} className="[&_svg]:h-5 [&_svg]:w-5" />
+          </span>
+        }
         description={[
           player.jersey_number !== null ? `#${player.jersey_number}` : null,
           player.position,

@@ -1,5 +1,5 @@
-import type { AppRole, Squad } from '@/lib/types';
-import { ALL_ROLES } from '@/lib/roles';
+import type { AppRole, ExcoRole, Squad } from '@/lib/types';
+import { ALL_ROLES, EXCO_ROLES } from '@/lib/roles';
 
 export type ActionResult = { ok: true; id?: string } | { ok: false; error: string };
 
@@ -36,6 +36,12 @@ export function num(fd: FormData, key: string): number | null {
 }
 
 export const bool = (fd: FormData, key: string) => fd.get(key) === 'on' || fd.get(key) === 'true';
+
+/** Reads an ExCo post picker. Anything unrecognised means no post. */
+export function excoRoleOf(fd: FormData, key = 'exco_role'): ExcoRole | null {
+  const v = str(fd, key);
+  return (EXCO_ROLES as string[]).includes(v) ? (v as ExcoRole) : null;
+}
 
 /** Reads a squad picker. Anything unrecognised means the whole academy. */
 export function squadOf(fd: FormData, key = 'squad'): Squad | null {

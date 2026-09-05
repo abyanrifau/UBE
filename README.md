@@ -17,7 +17,7 @@ level security) and **Tailwind CSS**. Deploys to Vercel as-is.
 | **Homepage**        | Public                         | Instagram grid, academy info, apply-to-join form, opt-in public fixtures, Log in            |
 | **Dashboard**       | Everyone signed in             | Academy, Boys and Girls views. Announcements, next events with RSVP, role-aware stats        |
 | **Schedule**        | Everyone signed in             | Academy, Boys and Girls views. List and month calendar, RSVP, attendance register, stats     |
-| **Players**         | Coach, ExCo, Treasurer, Admin  | Roster split into boys and girls squads, full profiles, attendance percentage, match stats   |
+| **Players**         | Coach, ExCo, Treasurer, Admin  | Roster split into boys and girls squads, ExCo posts, attendance percentage, match stats      |
 | **My Profile**      | Everyone signed in             | Own account, theme, password change, and own player record if linked                        |
 | **Financials**      | Coach, Treasurer, ExCo, Admin  | Entries, auto-rolled monthly and yearly statements, category breakdown, charts               |
 | **Manage Accounts** | Coach, Admin                   | Create logins, assign roles, deactivate, reset passwords, link to roster rows                |
@@ -70,11 +70,13 @@ and run the whole of:
 ```
 supabase/migrations/0001_init.sql
 supabase/migrations/0002_squads.sql
+supabase/migrations/0003_exco_roles.sql
 ```
 
 The first creates every table, the role helper functions, all RLS policies and
 the rollup views. The second splits the academy into a boys squad and a girls
-squad. Both are idempotent, so they are safe to re-run.
+squad. The third adds the committee post a player can hold. All three are
+idempotent, so they are safe to re-run.
 
 ### 3. Environment variables
 
@@ -203,7 +205,7 @@ UBE/
 ├── scripts/
 │   └── make-icons.mjs    builds the favicons from the crest, no deps
 ├── supabase/
-│   ├── migrations/       0001 schema, RLS and views, 0002 squads
+│   ├── migrations/       0001 schema and RLS, 0002 squads, 0003 ExCo posts
 │   ├── bootstrap_admin.sql
 │   └── rls_smoke_test.sql
 └── docs/                 DEMO.md, INSTAGRAM.md, PERMISSIONS.md

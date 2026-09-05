@@ -1,4 +1,4 @@
-import type { AppRole, Squad } from './types';
+import type { AppRole, ExcoRole, Squad } from './types';
 
 /**
  * The single source of truth for what each role may do in the UI.
@@ -98,6 +98,38 @@ export function canViewSquad(
   if (canViewBothSquads(role)) return true;
   return !!mySquad && mySquad === target;
 }
+
+/* ------------------------------------------------------------------ */
+/* ExCo posts                                                          */
+/*                                                                     */
+/* Committee members are players who also hold a post, so the post is  */
+/* a field on the roster row rather than a separate kind of account.   */
+/*                                                                     */
+/* This is descriptive only. It grants nothing. A player holding the   */
+/* Treasurer post still cannot open Financials unless their account    */
+/* role is Treasurer, which is a separate decision an owner makes in   */
+/* Manage Accounts.                                                    */
+/* ------------------------------------------------------------------ */
+
+export const EXCO_ROLES: ExcoRole[] = [
+  'vice_president',
+  'secretary',
+  'treasurer',
+  'event_coordinator_boy',
+  'event_coordinator_girl',
+  'academy_rep_boy',
+  'academy_rep_girl',
+];
+
+export const EXCO_ROLE_LABEL: Record<ExcoRole, string> = {
+  vice_president: 'Vice President',
+  secretary: 'Secretary',
+  treasurer: 'Treasurer',
+  event_coordinator_boy: 'Event Coordinator (Boy)',
+  event_coordinator_girl: 'Event Coordinator (Girl)',
+  academy_rep_boy: 'Academy Representative (Boy)',
+  academy_rep_girl: 'Academy Representative (Girl)',
+};
 
 /** The squad tabs this person may open, in display order. */
 export function visibleSquads(

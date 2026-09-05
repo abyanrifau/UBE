@@ -61,7 +61,7 @@ export default async function EventPage({ params }: { params: { id: string } }) 
       canEditRoster
         ? supabase
             .from('players')
-            .select('id,full_name,jersey_number,squad')
+            .select('id,full_name,jersey_number,squad,exco_role')
             .eq('is_active', true)
             .order('jersey_number', { ascending: true, nullsFirst: false })
             .order('full_name')
@@ -93,7 +93,7 @@ export default async function EventPage({ params }: { params: { id: string } }) 
   // the Invitational or a joint conditioning block, registers everyone.
   const players = ((playersRes.data ?? []) as Pick<
     Player,
-    'id' | 'full_name' | 'jersey_number' | 'squad'
+    'id' | 'full_name' | 'jersey_number' | 'squad' | 'exco_role'
   >[]).filter((p) => event.squad === null || p.squad === event.squad);
   const attendanceByPlayer = new Map<string, AttendanceRow>(
     ((attendanceRes.data ?? []) as AttendanceRow[]).map((a) => [a.player_id, a]),
@@ -160,6 +160,7 @@ export default async function EventPage({ params }: { params: { id: string } }) 
                   playerId: p.id,
                   name: p.full_name,
                   jersey: p.jersey_number,
+                  excoRole: p.exco_role,
                   status: attendanceByPlayer.get(p.id)?.status ?? null,
                 }))}
               />
@@ -181,6 +182,7 @@ export default async function EventPage({ params }: { params: { id: string } }) 
                   playerId: p.id,
                   name: p.full_name,
                   jersey: p.jersey_number,
+                  excoRole: p.exco_role,
                   stat: statsByPlayer.get(p.id) ?? null,
                 }))}
               />

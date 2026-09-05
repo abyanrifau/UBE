@@ -12,6 +12,19 @@ export type ThemePreference = 'light' | 'dark' | 'system';
  */
 export type Squad = 'boys' | 'girls';
 
+/**
+ * A committee post held by a player. Descriptive only: it grants nothing,
+ * and access is still decided entirely by the account's AppRole.
+ */
+export type ExcoRole =
+  | 'vice_president'
+  | 'secretary'
+  | 'treasurer'
+  | 'event_coordinator_boy'
+  | 'event_coordinator_girl'
+  | 'academy_rep_boy'
+  | 'academy_rep_girl';
+
 export type Profile = {
   id: string;
   email: string;
@@ -40,6 +53,7 @@ export type Player = {
   guardian_phone: string | null;
   notes: string | null;
   squad: Squad | null;
+  exco_role: ExcoRole | null;
   is_active: boolean;
   created_at: string;
   updated_at: string;

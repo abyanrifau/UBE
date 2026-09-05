@@ -88,6 +88,31 @@ polite half of the rule. RLS is the half that actually enforces it.
 Mirrored in `src/lib/roles.ts` as `canViewSquad()` and `visibleSquads()`, and
 in `src/lib/squads.ts` as `inSquadView()`.
 
+## ExCo posts are not permissions
+
+Committee members are players, not a separate kind of account, so the post
+they hold is a field on their roster row: `players.exco_role`.
+
+| Post                          |
+| ----------------------------- |
+| Vice President                |
+| Secretary                     |
+| Treasurer                     |
+| Event Coordinator (Boy)       |
+| Event Coordinator (Girl)      |
+| Academy Representative (Boy)  |
+| Academy Representative (Girl) |
+
+**This field grants nothing.** It puts a star next to a name and nothing
+else. What somebody may see and do is decided entirely by `profiles.role`
+and the policies above.
+
+The trap worth naming: giving a player the **Treasurer** post does not let
+them near the books. That needs the Treasurer *account role*, which an owner
+assigns in Manage Accounts. The two are deliberately separate, so a committee
+list can be accurate without quietly handing out access. In practice you
+usually want both, set in two places on purpose.
+
 ## Per-row visibility
 
 Announcements and events each carry a `visible_to_roles` array. A row is

@@ -6,6 +6,7 @@ import type {
   FinanceEntry,
   MatchStat,
   Player,
+  ExcoRole,
   Profile,
   Squad,
 } from '@/lib/types';
@@ -122,6 +123,21 @@ type PlayerSeed = [
   linkedProfile?: string,
 ];
 
+/**
+ * The committee. ExCo members are players who also hold a post, so this maps
+ * onto the roster rather than onto separate records. Every post is filled so
+ * the demo shows all seven.
+ */
+const EXCO_POSTS: Record<string, ExcoRole> = {
+  'Aishath Zoya': 'vice_president',
+  'Ali Shamaan': 'secretary',
+  'Adam Naseer': 'treasurer',
+  'Yoosuf Zayan': 'event_coordinator_boy',
+  'Hawwa Nashwa': 'event_coordinator_girl',
+  'Mohamed Sirajj': 'academy_rep_boy',
+  'Mariyam Zaha': 'academy_rep_girl',
+};
+
 const playerSeeds: PlayerSeed[] = [
   ['Mohamed Sirajj', 'boys', 7, 'Outside Hitter', 181, 72, '2006-04-12', PROFILE_IDS.player],
   ['Mariyam Zaha', 'girls', 3, 'Setter', 169, 60, '2005-09-30', PROFILE_IDS.player2],
@@ -172,6 +188,7 @@ export const seedPlayers: Player[] = playerSeeds.map(
             ? 'Cleared to return after an ankle sprain. Ease back into full jump load over two weeks.'
             : null,
       squad,
+      exco_role: EXCO_POSTS[full_name] ?? null,
       is_active: i < 13,
       created_at: iso(-200 + i, 10),
       updated_at: iso(-30, 10),

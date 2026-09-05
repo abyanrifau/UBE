@@ -10,7 +10,8 @@ export function PageHeader({
   description,
   action,
 }: {
-  title: string;
+  /** Usually a string, but takes nodes so a name can carry a badge. */
+  title: ReactNode;
   description?: string;
   action?: ReactNode;
 }) {

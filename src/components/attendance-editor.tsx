@@ -2,11 +2,18 @@
 
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import type { AttendanceStatus } from '@/lib/types';
+import type { AttendanceStatus, ExcoRole } from '@/lib/types';
 import { saveAttendance } from '@/lib/actions/events';
 import { Notice } from '@/components/ui';
+import { ExcoStar } from '@/components/exco-star';
 
-type Row = { playerId: string; name: string; jersey: number | null; status: AttendanceStatus | null };
+type Row = {
+  playerId: string;
+  name: string;
+  jersey: number | null;
+  excoRole: ExcoRole | null;
+  status: AttendanceStatus | null;
+};
 
 const OPTIONS: { value: AttendanceStatus; label: string; short: string }[] = [
   { value: 'present', label: 'Present', short: 'P' },
@@ -101,6 +108,7 @@ export function AttendanceEditor({
                 {row.jersey ?? '–'}
               </span>
               <span className="truncate text-[14px] font-medium">{row.name}</span>
+              <ExcoStar role={row.excoRole} />
             </span>
 
             <span className="inline-flex border border-line" role="group" aria-label={`Attendance for ${row.name}`}>
